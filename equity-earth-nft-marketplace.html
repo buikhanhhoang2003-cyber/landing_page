@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUITY EARTH - Quản Lý Tài Sản & NFT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --deep-space: #0A0E1A;
+            --dark-navy: #111827;
+            --dark-teal: #0F2027;
+            --forest-dark: #1A2F23;
+            --forest-medium: #2D4A3E;
+            --emerald: #10B981;
+            --emerald-light: #34D399;
+            --emerald-dark: #059669;
+            --cyan: #06B6D4;
+            --purple: #8B5CF6;
+            --violet: #A78BFA;
+            --mint: #A7F3D0;
+            --cream: #F0FDF4;
+            --orange: #F59E0B;
+            --red: #EF4444;
+            --blue: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--deep-space) 0%, var(--dark-teal) 50%, var(--forest-dark) 100%);
+            background-attachment: fixed;
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        header {
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--cream);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 4px;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            color: var(--deep-space);
+            border-color: transparent;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--cream), var(--emerald-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--emerald);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(240, 253, 244, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        /* NFT Marketplace */
+        .marketplace-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(26, 47, 35, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--cream);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--emerald);
+        }
+
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .nft-card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--emerald);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .nft-image {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--forest-dark), var(--dark-teal));
+        }
+
+        .nft-3d {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nft-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            color: var(--deep-space);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nft-badge.sold {
+            background: linear-gradient(135deg, var(--red), var(--orange));
+        }
+
+        .nft-info {
+            padding: 1.5rem;
+        }
+
+        .nft-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+        }
+
+        .nft-description {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .nft-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: rgba(240, 253, 244, 0.5);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .nft-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .price-label {
+            font-size: 0.8rem;
+            color: rgba(240, 253, 244, 0.6);
+        }
+
+        .price-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            border: none;
+            color: var(--deep-space);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .buy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Smart Contract Section */
+        .contract-section {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--emerald-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contract-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .contract-info {
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .contract-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-label {
+            font-size: 0.8rem;
+            color: rgba(240, 253, 244, 0.6);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .field-value {
+            color: var(--cream);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        .contract-code {
+            background: rgba(10, 14, 26, 0.8);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .contract-code::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .contract-code::-webkit-scrollbar-track {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .contract-code::-webkit-scrollbar-thumb {
+            background: var(--emerald);
+            border-radius: 4px;
+        }
+
+        .code-line {
+            margin-bottom: 0.5rem;
+        }
+
+        .code-keyword {
+            color: var(--purple);
+        }
+
+        .code-function {
+            color: var(--cyan);
+        }
+
+        .code-string {
+            color: var(--orange);
+        }
+
+        .code-comment {
+            color: rgba(240, 253, 244, 0.5);
+            font-style: italic;
+        }
+
+        .code-number {
+            color: var(--emerald-light);
+        }
+
+        /* Insurance/Risk Section */
+        .insurance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .insurance-card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .insurance-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .insurance-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--cream);
+            margin-bottom: 1rem;
+        }
+
+        .insurance-description {
+            color: rgba(240, 253, 244, 0.8);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .insurance-features {
+            list-style: none;
+        }
+
+        .insurance-features li {
+            padding-left: 2rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            color: rgba(240, 253, 244, 0.8);
+        }
+
+        .insurance-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--emerald);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .risk-visualization {
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .risk-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .risk-bar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .risk-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .risk-bar-label {
+            color: rgba(240, 253, 244, 0.8);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .risk-bar-value {
+            color: var(--emerald-light);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .risk-bar-track {
+            width: 100%;
+            height: 32px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 16px;
+            transition: width 1s ease-out;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            animation: fillBar 1.5s ease-out;
+        }
+
+        @keyframes fillBar {
+            from {
+                width: 0 !important;
+            }
+        }
+
+        .claim-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+            border: 2px solid var(--purple);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .claim-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--violet);
+            margin-bottom: 1rem;
+        }
+
+        .claim-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .claim-stat {
+            text-align: center;
+        }
+
+        .claim-stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .claim-stat-label {
+            font-size: 0.85rem;
+            color: rgba(240, 253, 244, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        .claim-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--purple), var(--violet));
+            border: none;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .claim-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--dark-teal), var(--forest-dark));
+            border: 2px solid var(--emerald);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 30px;
+            height: 30px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--red);
+            border-radius: 50%;
+            color: var(--red);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--red);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--emerald-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-nft-preview {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--forest-dark), var(--dark-teal));
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-details {
+            margin-bottom: 2rem;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .modal-detail-label {
+            color: rgba(240, 253, 244, 0.6);
+        }
+
+        .modal-detail-value {
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            color: var(--deep-space);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--cream);
+            border: 2px solid rgba(240, 253, 244, 0.3);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--cream);
+            background: rgba(240, 253, 244, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .contract-grid,
+            .insurance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nft-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .claim-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">EQUITY EARTH</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active">Marketplace</button>
+                <button class="nav-tab">My NFTs</button>
+                <button class="nav-tab">Smart Contracts</button>
+                <button class="nav-tab">Insurance</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Quản Lý Tài Sản & NFT</h1>
+            <p class="page-description">
+                Sở hữu phần đất nông nghiệp thông qua NFT, theo dõi hợp đồng thông minh và được bảo vệ bởi cơ chế bảo hiểm phi tập trung
+            </p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">💎 Tổng NFT Khả Dụng</div>
+                <div class="stat-value">100</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">✅ Đã Bán</div>
+                <div class="stat-value">67</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">💰 Giá Sàn</div>
+                <div class="stat-value">250 ETH</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📊 Tổng Giá Trị</div>
+                <div class="stat-value">25K ETH</div>
+            </div>
+        </div>
+
+        <!-- Marketplace Filters -->
+        <div class="marketplace-filters">
+            <button class="filter-btn active">Tất Cả</button>
+            <button class="filter-btn">Đang Bán</button>
+            <button class="filter-btn">Đã Bán</button>
+            <button class="filter-btn">Sầu Riêng</button>
+            <button class="filter-btn">Cà Phê</button>
+            <button class="filter-btn">Cao Cấp</button>
+        </div>
+
+        <!-- NFT Grid -->
+        <div class="nft-grid">
+            <div class="nft-card" onclick="openNFTModal('Khu A - Plot #001')">
+                <div class="nft-image">
+                    <canvas class="nft-3d" id="nft-1"></canvas>
+                    <div class="nft-badge">Đang Bán</div>
+                </div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Khu A - Plot #001</h3>
+                    <p class="nft-description">1 hecta vườn sầu riêng Monthong premium, năng suất cao, thu hoạch Q2/2026</p>
+                    <div class="nft-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Diện Tích</span>
+                            <span class="detail-value">1.0 ha</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loại Cây</span>
+                            <span class="detail-value">Sầu Riêng</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ROI Dự Kiến</span>
+                            <span class="detail-value">18% / năm</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Thu Hoạch</span>
+                            <span class="detail-value">Q2 2026</span>
+                        </div>
+                    </div>
+                    <div class="nft-price">
+                        <span class="price-label">Giá</span>
+                        <span class="price-value">250 ETH</span>
+                    </div>
+                    <button class="buy-btn">Mua Ngay</button>
+                </div>
+            </div>
+
+            <div class="nft-card">
+                <div class="nft-image">
+                    <canvas class="nft-3d" id="nft-2"></canvas>
+                    <div class="nft-badge">Đang Bán</div>
+                </div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Khu B - Plot #015</h3>
+                    <p class="nft-description">1 hecta cà phê Arabica hữu cơ, chứng nhận quốc tế, giá cao</p>
+                    <div class="nft-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Diện Tích</span>
+                            <span class="detail-value">1.0 ha</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loại Cây</span>
+                            <span class="detail-value">Cà Phê</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ROI Dự Kiến</span>
+                            <span class="detail-value">22% / năm</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Thu Hoạch</span>
+                            <span class="detail-value">Q1 2026</span>
+                        </div>
+                    </div>
+                    <div class="nft-price">
+                        <span class="price-label">Giá</span>
+                        <span class="price-value">280 ETH</span>
+                    </div>
+                    <button class="buy-btn">Mua Ngay</button>
+                </div>
+            </div>
+
+            <div class="nft-card">
+                <div class="nft-image">
+                    <canvas class="nft-3d" id="nft-3"></canvas>
+                    <div class="nft-badge sold">Đã Bán</div>
+                </div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Khu A - Plot #007</h3>
+                    <p class="nft-description">1 hecta sầu riêng Ri6, đã cho trái, hiệu suất cao</p>
+                    <div class="nft-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Diện Tích</span>
+                            <span class="detail-value">1.0 ha</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loại Cây</span>
+                            <span class="detail-value">Sầu Riêng</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ROI Thực Tế</span>
+                            <span class="detail-value">21% / năm</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Chủ Sở Hữu</span>
+                            <span class="detail-value">0x742d...3f9a</span>
+                        </div>
+                    </div>
+                    <div class="nft-price">
+                        <span class="price-label">Giá Bán</span>
+                        <span class="price-value">265 ETH</span>
+                    </div>
+                    <button class="buy-btn" disabled>Đã Bán</button>
+                </div>
+            </div>
+
+            <div class="nft-card">
+                <div class="nft-image">
+                    <canvas class="nft-3d" id="nft-4"></canvas>
+                    <div class="nft-badge">Cao Cấp</div>
+                </div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Khu Premium - Plot #P01</h3>
+                    <p class="nft-description">2 hecta vườn sầu riêng premium với hệ thống tưới tự động AI</p>
+                    <div class="nft-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Diện Tích</span>
+                            <span class="detail-value">2.0 ha</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loại Cây</span>
+                            <span class="detail-value">Sầu Riêng</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ROI Dự Kiến</span>
+                            <span class="detail-value">25% / năm</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Thu Hoạch</span>
+                            <span class="detail-value">Q3 2026</span>
+                        </div>
+                    </div>
+                    <div class="nft-price">
+                        <span class="price-label">Giá</span>
+                        <span class="price-value">550 ETH</span>
+                    </div>
+                    <button class="buy-btn">Mua Ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Contract Section -->
+        <div class="contract-section">
+            <h2 class="section-title">📜 Smart Contract - Minh Bạch Lợi Nhuận</h2>
+            <div class="contract-grid">
+                <div class="contract-info">
+                    <div class="contract-field">
+                        <div class="field-label">Contract Address</div>
+                        <div class="field-value">0x742d35Cc6634C0532925a3b844Bc9e7595f3f9a2</div>
+                    </div>
+                    <div class="contract-field">
+                        <div class="field-label">Network</div>
+                        <div class="field-value">Ethereum Mainnet</div>
+                    </div>
+                    <div class="contract-field">
+                        <div class="field-label">Token Standard</div>
+                        <div class="field-value">ERC-721 (NFT)</div>
+                    </div>
+                    <div class="contract-field">
+                        <div class="field-label">Profit Distribution</div>
+                        <div class="field-value">Tự động hàng quý qua Smart Contract</div>
+                    </div>
+                    <div class="contract-field">
+                        <div class="field-label">Verified</div>
+                        <div class="field-value">✓ Đã kiểm toán bởi CertiK</div>
+                    </div>
+                </div>
+
+                <div class="contract-code">
+                    <div class="code-line"><span class="code-comment">// Smart Contract - Profit Distribution</span></div>
+                    <div class="code-line"><span class="code-keyword">function</span> <span class="code-function">distributeProfits</span>() <span class="code-keyword">public</span> {</div>
+                    <div class="code-line">    <span class="code-keyword">uint256</span> totalProfit = harvestRevenue;</div>
+                    <div class="code-line">    <span class="code-keyword">uint256</span> operatingCost = totalProfit * <span class="code-number">30</span> / <span class="code-number">100</span>;</div>
+                    <div class="code-line">    <span class="code-keyword">uint256</span> insuranceFund = totalProfit * <span class="code-number">10</span> / <span class="code-number">100</span>;</div>
+                    <div class="code-line">    <span class="code-keyword">uint256</span> investorProfit = totalProfit - operatingCost - insuranceFund;</div>
+                    <div class="code-line">    </div>
+                    <div class="code-line">    <span class="code-comment">// Chia lợi nhuận cho NFT holders</span></div>
+                    <div class="code-line">    <span class="code-keyword">for</span> (<span class="code-keyword">uint</span> i = <span class="code-number">0</span>; i < nftHolders.length; i++) {</div>
+                    <div class="code-line">        <span class="code-keyword">address</span> holder = nftHolders[i];</div>
+                    <div class="code-line">        <span class="code-keyword">uint256</span> share = investorProfit / totalNFTs;</div>
+                    <div class="code-line">        payable(holder).<span class="code-function">transfer</span>(share);</div>
+                    <div class="code-line">    }</div>
+                    <div class="code-line">}</div>
+                    <div class="code-line"></div>
+                    <div class="code-line"><span class="code-comment">// Cơ chế chia lợi nhuận:</span></div>
+                    <div class="code-line"><span class="code-comment">// - 60% cho nhà đầu tư NFT</span></div>
+                    <div class="code-line"><span class="code-comment">// - 30% chi phí vận hành</span></div>
+                    <div class="code-line"><span class="code-comment">// - 10% quỹ bảo hiểm</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insurance Section -->
+        <div class="contract-section">
+            <h2 class="section-title">🛡️ Cơ Chế Bảo Hiểm & Giảm Thiểu Rủi Ro</h2>
+            
+            <div class="insurance-grid">
+                <div class="insurance-card">
+                    <div class="insurance-icon">🌪️</div>
+                    <h3 class="insurance-title">Bảo Hiểm Thiên Tai</h3>
+                    <p class="insurance-description">
+                        Quỹ bảo hiểm phi tập trung tự động bồi thường khi xảy ra thiên tai được xác nhận bởi Oracle.
+                    </p>
+                    <ul class="insurance-features">
+                        <li>Tự động kích hoạt khi thiên tai xảy ra</li>
+                        <li>Bồi thường lên đến 80% giá trị NFT</li>
+                        <li>Xác minh bởi Chainlink Oracle</li>
+                        <li>Thanh toán trong 72 giờ</li>
+                    </ul>
+                </div>
+
+                <div class="insurance-card">
+                    <div class="insurance-icon">⚖️</div>
+                    <h3 class="insurance-title">Chia Sẻ Rủi Ro</h3>
+                    <p class="insurance-description">
+                        Rủi ro được phân tán trên toàn bộ NFT holders thông qua quỹ dự phòng on-chain.
+                    </p>
+                    <ul class="insurance-features">
+                        <li>10% lợi nhuận vào quỹ bảo hiểm</li>
+                        <li>Rủi ro chia đều cho tất cả holders</li>
+                        <li>Minh bạch hoàn toàn trên blockchain</li>
+                        <li>Governance vote để sử dụng quỹ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Risk Visualization -->
+            <div class="risk-visualization">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--emerald-light); margin-bottom: 1.5rem;">
+                    📊 Phân Bổ Quỹ Bảo Hiểm
+                </h3>
+                <div class="risk-bars">
+                    <div class="risk-bar-item">
+                        <div class="risk-bar-header">
+                            <span class="risk-bar-label">Quỹ Khả Dụng</span>
+                            <span class="risk-bar-value">1,800 ETH (72%)</span>
+                        </div>
+                        <div class="risk-bar-track">
+                            <div class="risk-bar-fill" style="width: 72%; background: linear-gradient(90deg, #10B981, #34D399);"></div>
+                        </div>
+                    </div>
+                    <div class="risk-bar-item">
+                        <div class="risk-bar-header">
+                            <span class="risk-bar-label">Đã Bồi Thường</span>
+                            <span class="risk-bar-value">300 ETH (12%)</span>
+                        </div>
+                        <div class="risk-bar-track">
+                            <div class="risk-bar-fill" style="width: 12%; background: linear-gradient(90deg, #06B6D4, #22D3EE);"></div>
+                        </div>
+                    </div>
+                    <div class="risk-bar-item">
+                        <div class="risk-bar-header">
+                            <span class="risk-bar-label">Dự Phòng Thiên Tai</span>
+                            <span class="risk-bar-value">400 ETH (16%)</span>
+                        </div>
+                        <div class="risk-bar-track">
+                            <div class="risk-bar-fill" style="width: 16%; background: linear-gradient(90deg, #8B5CF6, #A78BFA);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim Section -->
+            <div class="claim-section">
+                <h3 class="claim-title">💰 Thông Tin Quỹ Bảo Hiểm Hiện Tại</h3>
+                <div class="claim-info">
+                    <div class="claim-stat">
+                        <div class="claim-stat-value">2,500 ETH</div>
+                        <div class="claim-stat-label">Tổng Quỹ Dự Phòng</div>
+                    </div>
+                    <div class="claim-stat">
+                        <div class="claim-stat-value">95%</div>
+                        <div class="claim-stat-label">Tỷ Lệ Bảo Hiểm</div>
+                    </div>
+                    <div class="claim-stat">
+                        <div class="claim-stat-value">12</div>
+                        <div class="claim-stat-label">Đơn Đã Bồi Thường</div>
+                    </div>
+                </div>
+                <p style="color: rgba(240, 253, 244, 0.8); margin-bottom: 1.5rem; line-height: 1.7;">
+                    Nếu plot của bạn bị ảnh hưởng bởi thiên tai (lũ lụt, hạn hán, bão), Smart Contract sẽ tự động 
+                    kích hoạt bồi thường dựa trên dữ liệu từ Chainlink Weather Oracle. Không cần thủ tục phức tạp, 
+                    thanh toán trong vòng 72 giờ.
+                </p>
+                <button class="claim-btn">Xem Lịch Sử Bồi Thường</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NFT Purchase Modal -->
+    <div class="modal" id="nftModal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeNFTModal()">×</div>
+            <h2 class="modal-title" id="modalNFTTitle">Khu A - Plot #001</h2>
+            <div class="modal-nft-preview">
+                <canvas id="modal-nft-canvas" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <div class="modal-details">
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Diện tích</span>
+                    <span class="modal-detail-value">1.0 ha</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Loại cây trồng</span>
+                    <span class="modal-detail-value">Sầu riêng Monthong</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">ROI dự kiến</span>
+                    <span class="modal-detail-value">18% / năm</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Thu hoạch tiếp theo</span>
+                    <span class="modal-detail-value">Q2 2026 (5 tháng)</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Giá mua</span>
+                    <span class="modal-detail-value">250 ETH (~$625,000)</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeNFTModal()">Hủy</button>
+                <button class="btn btn-primary" onclick="purchaseNFT()">Xác Nhận Mua</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Track initialized canvases to prevent multiple initializations
+        const initializedCanvases = new Set();
+        const animationFrames = new Map();
+
+        // Initialize NFT 3D visualizations
+        function createNFT3D(canvasId, color) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || initializedCanvases.has(canvasId)) return;
+            
+            // Mark as initialized
+            initializedCanvases.add(canvasId);
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setClearColor(0x0F2027, 1);
+
+            // Create plot
+            const geometry = new THREE.BoxGeometry(2, 0.2, 2);
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                shininess: 50,
+                emissive: color,
+                emissiveIntensity: 0.2
+            });
+            
+            const plot = new THREE.Mesh(geometry, material);
+            scene.add(plot);
+
+            // Add trees
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const treeGeometry = new THREE.ConeGeometry(0.1, 0.3, 8);
+                    const treeMaterial = new THREE.MeshPhongMaterial({ color: 0x10B981 });
+                    const tree = new THREE.Mesh(treeGeometry, treeMaterial);
+                    tree.position.set(i * 0.4 - 0.8, 0.25, j * 0.4 - 0.8);
+                    scene.add(tree);
+                }
+            }
+
+            const light = new THREE.PointLight(0x10B981, 1, 50);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+
+            const ambientLight = new THREE.AmbientLight(0xF0FDF4, 0.5);
+            scene.add(ambientLight);
+
+            camera.position.set(3, 2, 3);
+            camera.lookAt(0, 0, 0);
+
+            let animationId;
+            function animate() {
+                animationId = requestAnimationFrame(animate);
+                plot.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            }
+            
+            // Store animation frame ID for cleanup
+            animationFrames.set(canvasId, animationId);
+            animate();
+        }
+
+        // Initialize NFTs after DOM is loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            createNFT3D('nft-1', 0x10B981);
+            createNFT3D('nft-2', 0x06B6D4);
+            createNFT3D('nft-3', 0x8B5CF6);
+            createNFT3D('nft-4', 0xF59E0B);
+        });
+
+        // Modal functions
+        function openNFTModal(title) {
+            document.getElementById('modalNFTTitle').textContent = title;
+            document.getElementById('nftModal').classList.add('active');
+            
+            anime({
+                targets: '#nftModal .modal-content',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 400,
+                easing: 'easeOutBack'
+            });
+
+            // Create 3D in modal only once
+            if (!initializedCanvases.has('modal-nft-canvas')) {
+                setTimeout(() => createNFT3D('modal-nft-canvas', 0x10B981), 100);
+            }
+        }
+
+        function closeNFTModal() {
+            anime({
+                targets: '#nftModal .modal-content',
+                scale: [1, 0.8],
+                opacity: [1, 0],
+                duration: 300,
+                easing: 'easeInBack',
+                complete: () => {
+                    document.getElementById('nftModal').classList.remove('active');
+                }
+            });
+        }
+
+        function purchaseNFT() {
+            anime({
+                targets: '.btn-primary',
+                scale: [1, 0.9, 1.1, 1],
+                duration: 400,
+                easing: 'easeInOutQuad',
+                complete: () => {
+                    alert('✅ Giao dịch thành công!\n\nBạn đã mua NFT "Khu A - Plot #001"\n\nTransaction Hash: 0x1a2b3c...\n\nNFT đã được chuyển vào ví của bạn.');
+                    closeNFTModal();
+                }
+            });
+        }
+
+        // Animations on load - wrapped in DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', () => {
+            anime({
+                targets: '.stat-card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.nft-card',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(150, {start: 300}),
+                duration: 1000,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.insurance-card',
+                scale: [0.9, 1],
+                opacity: [0, 1],
+                delay: anime.stagger(200),
+                duration: 800,
+                easing: 'easeOutBack'
+            });
+
+            // Animate risk bars on scroll into view
+            const riskObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const fills = entry.target.querySelectorAll('.risk-bar-fill');
+                        fills.forEach((fill, index) => {
+                            const targetWidth = fill.style.width;
+                            fill.style.width = '0';
+                            setTimeout(() => {
+                                fill.style.width = targetWidth;
+                            }, index * 200);
+                        });
+                        riskObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            const riskViz = document.querySelector('.risk-visualization');
+            if (riskViz) {
+                riskObserver.observe(riskViz);
+            }
+        });
+    </script>
+</body>
+</html>

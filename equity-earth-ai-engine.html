@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUITY EARTH - AI Engine & Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --deep-space: #0A0E1A;
+            --dark-navy: #111827;
+            --dark-teal: #0F2027;
+            --forest-dark: #1A2F23;
+            --forest-medium: #2D4A3E;
+            --emerald: #10B981;
+            --emerald-light: #34D399;
+            --emerald-dark: #059669;
+            --cyan: #06B6D4;
+            --purple: #8B5CF6;
+            --violet: #A78BFA;
+            --mint: #A7F3D0;
+            --cream: #F0FDF4;
+            --orange: #F59E0B;
+            --red: #EF4444;
+            --yellow: #FCD34D;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--deep-space) 0%, var(--dark-teal) 50%, var(--forest-dark) 100%);
+            background-attachment: fixed;
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        header {
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--emerald-light);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--emerald);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--cream), var(--emerald-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--cyan), transparent);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--emerald-light);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--emerald);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--emerald);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Disease Detection */
+        .detection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .detection-item {
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .detection-item:hover {
+            border-color: var(--emerald);
+            transform: translateY(-4px);
+        }
+
+        .detection-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, var(--forest-dark), var(--dark-teal));
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detection-label {
+            font-size: 0.9rem;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .detection-confidence {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 3px;
+            margin-right: 1rem;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald), var(--cyan));
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        .confidence-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--emerald-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .detection-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-healthy {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-light);
+        }
+
+        .status-warning {
+            background: rgba(252, 211, 77, 0.2);
+            color: var(--yellow);
+        }
+
+        .status-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        /* Recommendations */
+        .recommendations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recommendation-card {
+            background: rgba(10, 14, 26, 0.5);
+            border-left: 4px solid var(--emerald);
+            padding: 1.25rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateX(4px);
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--cream);
+        }
+
+        .recommendation-priority {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+        }
+
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        .priority-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--orange);
+        }
+
+        .priority-low {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--cyan);
+        }
+
+        .recommendation-text {
+            color: rgba(240, 253, 244, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Yield Prediction Chart */
+        .chart-canvas {
+            width: 100%;
+            height: 300px;
+            background: rgba(10, 14, 26, 0.3);
+            border-radius: 8px;
+        }
+
+        /* Resource Optimization */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            border-color: var(--emerald);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .resource-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--emerald-light);
+            margin-bottom: 1rem;
+        }
+
+        .resource-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-change {
+            font-size: 0.9rem;
+            color: var(--emerald);
+        }
+
+        .resource-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .resource-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald), var(--cyan));
+            border-radius: 4px;
+        }
+
+        /* Market Analysis */
+        .market-insights {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+            border: 2px solid var(--purple);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .insight-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--violet);
+            margin-bottom: 1.5rem;
+        }
+
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-label {
+            font-weight: 600;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-text {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">EQUITY EARTH - AI ENGINE</div>
+            <a href="equity-earth-green.html" class="back-link">← Quay Lại Trang Chủ</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">AI Engine & Analytics</h1>
+            <p class="page-description">
+                Hệ thống trí tuệ nhân tạo phân tích và đưa ra khuyến nghị tối ưu cho nông trại
+            </p>
+        </div>
+
+        <!-- Disease Detection -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔬 Phát Hiện Sâu Bệnh (Computer Vision)</h2>
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        Đang Quét
+                    </div>
+                </div>
+                <div class="detection-grid">
+                    <div class="detection-item">
+                        <div class="detection-image">
+                            <canvas id="detection-1" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                        <div class="detection-label">Khu vực A - Lô 15</div>
+                        <div class="detection-confidence">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 94%"></div>
+                            </div>
+                            <span class="confidence-value">94%</span>
+                        </div>
+                        <span class="detection-status status-healthy">✓ Khỏe Mạnh</span>
+                    </div>
+
+                    <div class="detection-item">
+                        <div class="detection-image">
+                            <canvas id="detection-2" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                        <div class="detection-label">Khu vực B - Lô 23</div>
+                        <div class="detection-confidence">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 78%"></div>
+                            </div>
+                            <span class="confidence-value">78%</span>
+                        </div>
+                        <span class="detection-status status-warning">⚠ Rầy Nâu Phát Hiện</span>
+                    </div>
+
+                    <div class="detection-item">
+                        <div class="detection-image">
+                            <canvas id="detection-3" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                        <div class="detection-label">Khu vực C - Lô 08</div>
+                        <div class="detection-confidence">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 92%"></div>
+                            </div>
+                            <span class="confidence-value">92%</span>
+                        </div>
+                        <span class="detection-status status-healthy">✓ Khỏe Mạnh</span>
+                    </div>
+
+                    <div class="detection-item">
+                        <div class="detection-image">
+                            <canvas id="detection-4" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                        <div class="detection-label">Khu vực D - Lô 31</div>
+                        <div class="detection-confidence">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 65%"></div>
+                            </div>
+                            <span class="confidence-value">65%</span>
+                        </div>
+                        <span class="detection-status status-danger">✗ Bệnh Lá Vàng</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🤖 Khuyến Nghị AI</h2>
+                </div>
+                <div class="recommendations-list">
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <span class="recommendation-title">Xử Lý Rầy Nâu</span>
+                            <span class="recommendation-priority priority-high">Cao</span>
+                        </div>
+                        <p class="recommendation-text">
+                            Phun thuốc sinh học tại khu B-23 trong vòng 48 giờ. Dự kiến giảm 85% sâu bệnh.
+                        </p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <span class="recommendation-title">Tăng Tưới Khu vực A</span>
+                            <span class="recommendation-priority priority-medium">Trung Bình</span>
+                        </div>
+                        <p class="recommendation-text">
+                            Độ ẩm đất giảm 15%. Khuyến nghị tăng tưới thêm 20% trong 3 ngày tới.
+                        </p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <span class="recommendation-title">Bón Phân Nitơ</span>
+                            <span class="recommendation-priority priority-medium">Trung Bình</span>
+                        </div>
+                        <p class="recommendation-text">
+                            Phát hiện thiếu Nitơ tại khu D. Bón 15kg phân đạm/ha để tối ưu năng suất.
+                        </p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <span class="recommendation-title">Thu Hoạch Sớm Khu C</span>
+                            <span class="recommendation-priority priority-low">Thấp</span>
+                        </div>
+                        <p class="recommendation-text">
+                            Giá thị trường tăng 12%. Cân nhắc thu hoạch sớm 1 tuần để tối ưu lợi nhuận.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yield Prediction -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">📈 Dự Đoán Năng Suất</h2>
+                <div class="status-badge">
+                    AI Model v2.4
+                </div>
+            </div>
+            <canvas id="yieldChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Resource Optimization -->
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--emerald-light); margin: 3rem 0 2rem;">
+            ⚡ Tối Ưu Hóa Tài Nguyên
+        </h2>
+        <div class="resource-grid">
+            <div class="resource-card">
+                <div class="resource-icon">💧</div>
+                <h3 class="resource-title">Tiết Kiệm Nước</h3>
+                <div class="resource-value">-32%</div>
+                <div class="resource-change">↓ 480m³/tuần</div>
+                <div class="resource-bar">
+                    <div class="resource-bar-fill" style="width: 68%"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">🌿</div>
+                <h3 class="resource-title">Giảm Phân Bón</h3>
+                <div class="resource-value">-25%</div>
+                <div class="resource-change">↓ 125kg/ha</div>
+                <div class="resource-bar">
+                    <div class="resource-bar-fill" style="width: 75%"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">🔋</div>
+                <h3 class="resource-title">Hiệu Suất Năng Lượng</h3>
+                <div class="resource-value">+18%</div>
+                <div class="resource-change">↑ 340 kWh tiết kiệm</div>
+                <div class="resource-bar">
+                    <div class="resource-bar-fill" style="width: 82%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Analysis -->
+        <div class="market-insights">
+            <h3 class="insight-title">📊 Phân Tích Thị Trường & Timing</h3>
+            <div class="insight-list">
+                <div class="insight-item">
+                    <div class="insight-icon">📈</div>
+                    <div class="insight-content">
+                        <div class="insight-label">Giá Sầu Riêng Tăng</div>
+                        <div class="insight-text">
+                            Giá trung bình tăng 12% trong 2 tuần qua. Dự đoán tiếp tục tăng thêm 8% do khan hiếm nguồn cung.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">🎯</div>
+                    <div class="insight-content">
+                        <div class="insight-label">Thời Điểm Thu Hoạch Tối Ưu</div>
+                        <div class="insight-text">
+                            Khuyến nghị thu hoạch khu vực C vào 15-20/02/2026 khi giá đạt đỉnh theo chu kỳ 5 năm.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">🌍</div>
+                    <div class="insight-content">
+                        <div class="insight-label">Nhu Cầu Xuất Khẩu</div>
+                        <div class="insight-text">
+                            Trung Quốc tăng nhập khẩu 35%. Cơ hội xuất khẩu với giá cao hơn 22% so với thị trường nội địa.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">💰</div>
+                    <div class="insight-content">
+                        <div class="insight-label">Dự Báo Lợi Nhuận</div>
+                        <div class="insight-text">
+                            Với điều kiện hiện tại, dự kiến ROI đạt 24% cho quý 1/2026, vượt mục tiêu 18%.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Create detection visualizations
+            function createDetectionViz(canvasId, health) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+
+                const colors = health === 'healthy' ? ['#10B981', '#34D399'] : 
+                               health === 'warning' ? ['#F59E0B', '#FCD34D'] :
+                               ['#EF4444', '#F87171'];
+
+                // Draw gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#1A2F23');
+                gradient.addColorStop(1, '#0F2027');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw leaf pattern
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = colors[i % 2];
+                    ctx.globalAlpha = 0.3 + Math.random() * 0.3;
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const size = 20 + Math.random() * 30;
+                    
+                    ctx.beginPath();
+                    ctx.ellipse(x, y, size, size * 1.5, Math.random() * Math.PI, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.globalAlpha = 1;
+            }
+
+            createDetectionViz('detection-1', 'healthy');
+            createDetectionViz('detection-2', 'warning');
+            createDetectionViz('detection-3', 'healthy');
+            createDetectionViz('detection-4', 'danger');
+
+            // Yield prediction chart
+            const yieldCanvas = document.getElementById('yieldChart');
+            if (yieldCanvas) {
+                const ctx = yieldCanvas.getContext('2d');
+                yieldCanvas.width = yieldCanvas.clientWidth;
+                yieldCanvas.height = yieldCanvas.clientHeight;
+
+                const data = [65, 72, 68, 78, 85, 90, 95, 98];
+                const labels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'];
+                const padding = 60;
+                const chartWidth = yieldCanvas.width - padding * 2;
+                const chartHeight = yieldCanvas.height - padding * 2;
+
+                // Background
+                ctx.fillStyle = '#0F2027';
+                ctx.fillRect(0, 0, yieldCanvas.width, yieldCanvas.height);
+
+                // Grid lines
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 5; i++) {
+                    const y = padding + (chartHeight / 5) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(yieldCanvas.width - padding, y);
+                    ctx.stroke();
+                }
+
+                // Draw line
+                ctx.beginPath();
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#10B981';
+
+                data.forEach((value, index) => {
+                    const x = padding + (chartWidth / (data.length - 1)) * index;
+                    const y = yieldCanvas.height - padding - (value / 100) * chartHeight;
+                    
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                ctx.stroke();
+
+                // Draw points
+                data.forEach((value, index) => {
+                    const x = padding + (chartWidth / (data.length - 1)) * index;
+                    const y = yieldCanvas.height - padding - (value / 100) * chartHeight;
+                    
+                    ctx.beginPath();
+                    ctx.fillStyle = '#34D399';
+                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Labels
+                ctx.fillStyle = '#F0FDF4';
+                ctx.font = '12px Outfit';
+                ctx.textAlign = 'center';
+                labels.forEach((label, index) => {
+                    const x = padding + (chartWidth / (data.length - 1)) * index;
+                    ctx.fillText(label, x, yieldCanvas.height - padding + 20);
+                });
+
+                // Title
+                ctx.font = 'bold 14px Outfit';
+                ctx.fillText('Năng suất dự đoán 8 tuần tới (tấn/ha)', yieldCanvas.width / 2, 30);
+            }
+
+            // Animations
+            anime({
+                targets: '.card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.resource-card',
+                scale: [0.9, 1],
+                opacity: [0, 1],
+                delay: anime.stagger(150),
+                duration: 1000,
+                easing: 'easeOutBack'
+            });
+        });
+    </script>
+</body>
+</html>

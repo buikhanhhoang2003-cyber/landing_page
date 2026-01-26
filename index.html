@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EQUITY EARTH - Nền Tảng Đầu Tư Nông Nghiệp Blockchain</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         :root {
@@ -481,6 +480,47 @@
             font-weight: 600;
         }
 
+        .feature-button {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            color: var(--deep-space);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .feature-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .feature-button.disabled {
+            background: rgba(45, 74, 62, 0.5);
+            color: rgba(240, 253, 244, 0.5);
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            margin-left: 0.75rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--purple);
+            color: var(--violet);
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         .user-flow {
             background: linear-gradient(135deg, rgba(45, 74, 62, 0.3), rgba(15, 32, 39, 0.3));
             padding: 6rem 3rem;
@@ -847,6 +887,7 @@
                     <li>Chọn loại phân bón dựa trên đề xuất AI</li>
                     <li>Lựa chọn người mua và sản phẩm đầu ra từ danh sách được tuyển chọn</li>
                 </ul>
+                <a href="equity-earth-dashboard.html" class="feature-button">Xem Dashboard</a>
             </div>
 
             <div class="feature-card">
@@ -859,6 +900,7 @@
                     <li>Giao dịch thị trường thứ cấp để đảm bảo thanh khoản</li>
                     <li>Phân phối cổ tức tự động bằng stablecoin hoặc token</li>
                 </ul>
+                <a href="equity-earth-nft-marketplace.html" class="feature-button">Xem NFT Marketplace</a>
             </div>
 
             <div class="feature-card">
@@ -871,6 +913,7 @@
                     <li>Phân tích thị trường để tối ưu thời điểm thu hoạch</li>
                     <li>Thuật toán tối ưu hóa tài nguyên nước và phân bón</li>
                 </ul>
+                <a href="equity-earth-ai-engine.html" class="feature-button">Xem AI Engine</a>
             </div>
 
             <div class="feature-card">
@@ -883,6 +926,7 @@
                     <li>Báo cáo thu hoạch với bằng chứng hình ảnh</li>
                     <li>Logistics phân phối và xác nhận giao hàng</li>
                 </ul>
+                <a href="equity-earth-supply-chain.html" class="feature-button">Xem Supply Chain Tracker</a>
             </div>
         </div>
     </section>
@@ -939,56 +983,56 @@
         <div class="team-grid">
             <div class="team-member">
                 <div class="member-avatar">👨‍💼</div>
-                <h3 class="member-name">XXX</h3>
+                <h3 class="member-name">Nguyễn Văn An</h3>
                 <div class="member-role">CEO & Đồng Sáng Lập</div>
                 <p class="member-bio">15 năm kinh nghiệm trong nông nghiệp công nghệ cao và quản lý dự án quy mô lớn</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👩‍💻</div>
-                <h3 class="member-name">XXX</h3>
+                <h3 class="member-name">Trần Thị Minh</h3>
                 <div class="member-role">CTO & Blockchain Lead</div>
                 <p class="member-bio">Chuyên gia blockchain với 10 năm phát triển smart contracts và DeFi</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👨‍🔬</div>
-                <h3 class="member-name">Hoàng Bùi Khánh</h3>
+                <h3 class="member-name">Lê Hoàng Nam</h3>
                 <div class="member-role">AI/ML Director</div>
                 <p class="member-bio">Tiến sĩ về Machine Learning, chuyên về computer vision và phân tích dữ liệu nông nghiệp</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👩‍🌾</div>
-                <h3 class="member-name">Nguyễn Huux Bình</h3>
+                <h3 class="member-name">Phạm Thu Hà</h3>
                 <div class="member-role">Giám Đốc Nông Nghiệp</div>
                 <p class="member-bio">Kỹ sư nông nghiệp với 12 năm kinh nghiệm canh tác bền vững và IoT</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👨‍💼</div>
-                <h3 class="member-name">Lê Đình Kiệt</h3>
+                <h3 class="member-name">Hoàng Minh Tuấn</h3>
                 <div class="member-role">CFO</div>
                 <p class="member-bio">Chuyên gia tài chính với kinh nghiệm quản lý quỹ đầu tư và tokenomics</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👩‍🎨</div>
-                <h3 class="member-name">XXX</h3>
+                <h3 class="member-name">Vũ Thị Lan</h3>
                 <div class="member-role">Head of Design</div>
                 <p class="member-bio">Chuyên gia UX/UI với đam mê tạo ra trải nghiệm người dùng xuất sắc</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👨‍🔧</div>
-                <h3 class="member-name">Bùi Khánh Hoàng</h3>
+                <h3 class="member-name">Đỗ Quang Huy</h3>
                 <div class="member-role">IoT & Hardware Lead</div>
                 <p class="member-bio">Kỹ sư điện tử chuyên về hệ thống cảm biến và thiết bị IoT cho nông nghiệp</p>
             </div>
 
             <div class="team-member">
                 <div class="member-avatar">👩‍💼</div>
-                <h3 class="member-name">XXX</h3>
+                <h3 class="member-name">Ngô Thu Trang</h3>
                 <div class="member-role">Community Manager</div>
                 <p class="member-bio">Chuyên gia xây dựng cộng đồng và phát triển quan hệ đối tác chiến lược</p>
             </div>
@@ -1033,133 +1077,187 @@
     </footer>
 
     <script>
-        // Three.js 3D Farm Visualization
-        const canvas = document.getElementById('farm-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        
-        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-        renderer.setClearColor(0x1A2F23, 1);
-
-        // Create farm plots with gradient colors
-        const plotGeometry = new THREE.BoxGeometry(1, 0.15, 1);
-        const plots = [];
-        const colors = [0x10B981, 0x34D399, 0x059669, 0x06B6D4, 0x8B5CF6];
-
-        for (let x = 0; x < 10; x++) {
-            for (let z = 0; z < 10; z++) {
-                const material = new THREE.MeshPhongMaterial({
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    shininess: 50,
-                    transparent: true,
-                    opacity: 0.85,
-                    emissive: colors[Math.floor(Math.random() * colors.length)],
-                    emissiveIntensity: 0.2
-                });
-                
-                const plot = new THREE.Mesh(plotGeometry, material);
-                plot.position.set(x * 1.2 - 5, Math.random() * 0.3, z * 1.2 - 5);
-                plots.push(plot);
-                scene.add(plot);
+        // Wait for DOM to be ready
+        window.addEventListener('DOMContentLoaded', () => {
+            // Canvas 2D Farm Visualization (fallback - works everywhere)
+            const canvas = document.getElementById('farm-canvas');
+            if (!canvas) {
+                console.error('Farm canvas not found');
+                return;
             }
-        }
 
-        // Add lights with green/cyan tones
-        const ambientLight = new THREE.AmbientLight(0xF0FDF4, 0.4);
-        scene.add(ambientLight);
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
 
-        const pointLight1 = new THREE.PointLight(0x10B981, 1.2, 50);
-        pointLight1.position.set(10, 10, 10);
-        scene.add(pointLight1);
+            // Create farm plots data
+            const plots = [];
+            const colors = ['#10B981', '#34D399', '#059669', '#06B6D4', '#8B5CF6'];
+            
+            for (let x = 0; x < 10; x++) {
+                for (let z = 0; z < 10; z++) {
+                    plots.push({
+                        x: x,
+                        z: z,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        offset: Math.random() * Math.PI * 2,
+                        size: 30 + Math.random() * 10
+                    });
+                }
+            }
 
-        const pointLight2 = new THREE.PointLight(0x06B6D4, 0.8, 50);
-        pointLight2.position.set(-10, 8, -10);
-        scene.add(pointLight2);
+            let time = 0;
+            let angle = 0;
 
-        const pointLight3 = new THREE.PointLight(0x8B5CF6, 0.5, 40);
-        pointLight3.position.set(0, 12, 0);
-        scene.add(pointLight3);
+            function draw() {
+                // Clear with gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#1A2F23');
+                gradient.addColorStop(0.5, '#0F2027');
+                gradient.addColorStop(1, '#2D4A3E');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        camera.position.set(10, 10, 10);
-        camera.lookAt(0, 0, 0);
+                // Draw grid lines
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 10; i++) {
+                    const y = 100 + i * 30;
+                    ctx.beginPath();
+                    ctx.moveTo(50, y);
+                    ctx.lineTo(canvas.width - 50, y);
+                    ctx.stroke();
+                }
 
-        // Animation
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.008;
+                // Calculate perspective
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const scale = 1.2;
 
-            // Smooth camera rotation
-            camera.position.x = Math.cos(time * 0.3) * 12;
-            camera.position.z = Math.sin(time * 0.3) * 12;
-            camera.position.y = 8 + Math.sin(time * 0.2) * 2;
-            camera.lookAt(0, 0, 0);
+                // Sort plots by depth for proper rendering
+                const sortedPlots = plots.slice().sort((a, b) => {
+                    const rotatedA = rotatePoint(a.x, a.z, angle);
+                    const rotatedB = rotatePoint(b.x, b.z, angle);
+                    return rotatedA.z - rotatedB.z;
+                });
 
-            // Animate plots with wave effect
-            plots.forEach((plot, i) => {
-                const row = Math.floor(i / 10);
-                const col = i % 10;
-                plot.position.y = Math.sin(time + row * 0.3 + col * 0.3) * 0.3;
-                plot.rotation.y = time * 0.5 + i * 0.1;
+                // Draw plots
+                sortedPlots.forEach((plot, i) => {
+                    // Rotate plot position
+                    const rotated = rotatePoint(plot.x - 4.5, plot.z - 4.5, angle);
+                    
+                    // Simple perspective projection
+                    const perspective = 1 / (1 + rotated.z * 0.05);
+                    const screenX = centerX + rotated.x * 40 * scale * perspective;
+                    const screenY = centerY + rotated.z * 20 * scale * perspective;
+                    
+                    // Wave effect
+                    const wave = Math.sin(time + plot.offset) * 5;
+                    const size = plot.size * perspective;
+                    
+                    // Draw plot with glow effect
+                    ctx.save();
+                    
+                    // Glow
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = plot.color;
+                    
+                    // Main shape
+                    ctx.fillStyle = plot.color;
+                    ctx.globalAlpha = 0.7 + Math.sin(time + plot.offset) * 0.2;
+                    
+                    // Draw diamond shape
+                    ctx.beginPath();
+                    ctx.moveTo(screenX, screenY - size/2 + wave);
+                    ctx.lineTo(screenX + size/2, screenY + wave);
+                    ctx.lineTo(screenX, screenY + size/2 + wave);
+                    ctx.lineTo(screenX - size/2, screenY + wave);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Draw highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(screenX - size/4, screenY - size/4 + wave, size/6, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                });
+
+                // Draw title overlay
+                ctx.save();
+                ctx.font = 'bold 18px "Playfair Display", serif';
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.8)';
+                ctx.fillText('100 ha Nông Trại Số', 20, 30);
+                ctx.font = '14px "Outfit", sans-serif';
+                ctx.fillStyle = 'rgba(240, 253, 244, 0.6)';
+                ctx.fillText('Visualization 3D Interactive', 20, 50);
+                ctx.restore();
+
+                // Update animation
+                time += 0.03;
+                angle += 0.005;
+
+                requestAnimationFrame(draw);
+            }
+
+            function rotatePoint(x, z, angle) {
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                return {
+                    x: x * cos - z * sin,
+                    z: x * sin + z * cos
+                };
+            }
+
+            draw();
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
             });
+        }); // End DOMContentLoaded
 
-            // Animate lights
-            pointLight1.intensity = 1 + Math.sin(time * 2) * 0.3;
-            pointLight2.intensity = 0.8 + Math.cos(time * 1.5) * 0.2;
+        // Anime.js animations - also wait for DOM
+        window.addEventListener('DOMContentLoaded', () => {
+            const animateOnScroll = () => {
+                anime({
+                    targets: '.layer-card',
+                    translateY: [50, 0],
+                    opacity: [0, 1],
+                    delay: anime.stagger(200),
+                    duration: 1000,
+                    easing: 'easeOutExpo'
+                });
 
-            renderer.render(scene, camera);
-        }
+                anime({
+                    targets: '.feature-card',
+                    scale: [0.9, 1],
+                    opacity: [0, 1],
+                    delay: anime.stagger(150),
+                    duration: 800,
+                    easing: 'easeOutQuad'
+                });
 
-        animate();
+                anime({
+                    targets: '.team-member',
+                    translateY: [60, 0],
+                    opacity: [0, 1],
+                    delay: anime.stagger(100),
+                    duration: 1200,
+                    easing: 'easeOutExpo'
+                });
 
-        // Handle resize
-        window.addEventListener('resize', () => {
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        });
-
-        // Anime.js animations on scroll
-        const animateOnScroll = () => {
-            anime({
-                targets: '.layer-card',
-                translateY: [50, 0],
-                opacity: [0, 1],
-                delay: anime.stagger(200),
-                duration: 1000,
-                easing: 'easeOutExpo'
-            });
-
-            anime({
-                targets: '.feature-card',
-                scale: [0.9, 1],
-                opacity: [0, 1],
-                delay: anime.stagger(150),
-                duration: 800,
-                easing: 'easeOutQuad'
-            });
-
-            anime({
-                targets: '.team-member',
-                translateY: [60, 0],
-                opacity: [0, 1],
-                delay: anime.stagger(100),
-                duration: 1200,
-                easing: 'easeOutExpo'
-            });
-
-            anime({
-                targets: '.stat-item',
-                scale: [0.8, 1],
-                opacity: [0, 1],
-                delay: anime.stagger(100),
-                duration: 800,
-                easing: 'easeOutBack'
-            });
-        };
+                anime({
+                    targets: '.stat-item',
+                    scale: [0.8, 1],
+                    opacity: [0, 1],
+                    delay: anime.stagger(100),
+                    duration: 800,
+                    easing: 'easeOutBack'
+                });
+            };
 
         // Trigger animations when sections come into view
         const observer = new IntersectionObserver((entries) => {
@@ -1170,66 +1268,88 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.section').forEach(section => {
-            observer.observe(section);
-        });
+        const sections = document.querySelectorAll('.section');
+        if (sections.length > 0) {
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        }
 
         // Animate hero elements on load
-        anime({
-            targets: '.hero-left > *',
-            translateX: [-50, 0],
-            opacity: [0, 1],
-            delay: anime.stagger(200, {start: 300}),
-            duration: 1000,
-            easing: 'easeOutExpo'
-        });
+        const heroLeftElements = document.querySelectorAll('.hero-left > *');
+        if (heroLeftElements.length > 0) {
+            anime({
+                targets: '.hero-left > *',
+                translateX: [-50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(200, {start: 300}),
+                duration: 1000,
+                easing: 'easeOutExpo'
+            });
+        }
 
-        anime({
-            targets: '#farm-canvas',
-            translateX: [50, 0],
-            opacity: [0, 1],
-            duration: 1200,
-            delay: 500,
-            easing: 'easeOutExpo'
-        });
+        const farmCanvas = document.getElementById('farm-canvas');
+        if (farmCanvas) {
+            anime({
+                targets: '#farm-canvas',
+                translateX: [50, 0],
+                opacity: [0, 1],
+                duration: 1200,
+                delay: 500,
+                easing: 'easeOutExpo'
+            });
+        }
 
         // Connect Wallet Button
-        document.querySelector('.connect-wallet').addEventListener('click', () => {
-            anime({
-                targets: '.connect-wallet',
-                scale: [1, 0.95, 1.05, 1],
-                duration: 500,
-                easing: 'easeInOutQuad'
+        const connectWalletBtn = document.querySelector('.connect-wallet');
+        if (connectWalletBtn) {
+            connectWalletBtn.addEventListener('click', () => {
+                anime({
+                    targets: '.connect-wallet',
+                    scale: [1, 0.95, 1.05, 1],
+                    duration: 500,
+                    easing: 'easeInOutQuad'
+                });
+                alert('Kết nối ví sẽ tích hợp với MetaMask/Phantom');
             });
-            alert('Kết nối ví sẽ tích hợp với MetaMask/Phantom');
-        });
+        }
 
         // Floating animation for gradient blobs
-        anime({
-            targets: '.bg-blob-1',
-            translateX: [0, 30, -30, 0],
-            translateY: [0, -40, 40, 0],
-            duration: 20000,
-            easing: 'easeInOutSine',
-            loop: true
-        });
+        const blob1 = document.querySelector('.bg-blob-1');
+        if (blob1) {
+            anime({
+                targets: '.bg-blob-1',
+                translateX: [0, 30, -30, 0],
+                translateY: [0, -40, 40, 0],
+                duration: 20000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+        }
 
-        anime({
-            targets: '.bg-blob-2',
-            translateX: [0, -40, 40, 0],
-            translateY: [0, 30, -30, 0],
-            duration: 15000,
-            easing: 'easeInOutSine',
-            loop: true
-        });
+        const blob2 = document.querySelector('.bg-blob-2');
+        if (blob2) {
+            anime({
+                targets: '.bg-blob-2',
+                translateX: [0, -40, 40, 0],
+                translateY: [0, 30, -30, 0],
+                duration: 15000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+        }
 
-        anime({
-            targets: '.bg-blob-3',
-            scale: [1, 1.1, 0.9, 1],
-            duration: 25000,
-            easing: 'easeInOutSine',
-            loop: true
-        });
+        const blob3 = document.querySelector('.bg-blob-3');
+        if (blob3) {
+            anime({
+                targets: '.bg-blob-3',
+                scale: [1, 1.1, 0.9, 1],
+                duration: 25000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+        }
+        }); // End DOMContentLoaded for animations
     </script>
 </body>
 </html>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUITY EARTH - Supply Chain Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --deep-space: #0A0E1A;
+            --dark-navy: #111827;
+            --dark-teal: #0F2027;
+            --forest-dark: #1A2F23;
+            --forest-medium: #2D4A3E;
+            --emerald: #10B981;
+            --emerald-light: #34D399;
+            --emerald-dark: #059669;
+            --cyan: #06B6D4;
+            --purple: #8B5CF6;
+            --violet: #A78BFA;
+            --mint: #A7F3D0;
+            --cream: #F0FDF4;
+            --orange: #F59E0B;
+            --red: #EF4444;
+            --blue: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--deep-space) 0%, var(--dark-teal) 50%, var(--forest-dark) 100%);
+            background-attachment: fixed;
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        header {
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--emerald-light);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--emerald);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--cream), var(--emerald-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .tracking-search {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tracking-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: rgba(26, 47, 35, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 6px;
+            color: var(--cream);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .tracking-input:focus {
+            outline: none;
+            border-color: var(--emerald);
+        }
+
+        .tracking-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            color: var(--deep-space);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tracking-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .timeline-section {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--emerald-light);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--emerald), var(--cyan), var(--purple));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .timeline-dot.completed {
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+        }
+
+        .timeline-dot.pending {
+            background: rgba(45, 74, 62, 0.5);
+            border: 2px solid var(--emerald);
+        }
+
+        .timeline-content {
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: var(--emerald-light);
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .timeline-description {
+            color: rgba(240, 253, 244, 0.7);
+            line-height: 1.6;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.6), rgba(15, 32, 39, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--emerald-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .info-label {
+            color: rgba(240, 253, 244, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: var(--cream);
+            font-weight: 500;
+        }
+
+        .qr-section {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            margin: 0 auto 1rem;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .qr-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--emerald);
+            border-radius: 25px;
+            color: var(--emerald-light);
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .carbon-footprint {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+            border: 2px solid var(--purple);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .carbon-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .carbon-stat {
+            text-align: center;
+        }
+
+        .carbon-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .carbon-label {
+            color: rgba(240, 253, 244, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .certificates {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .certificate-badge {
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-badge:hover {
+            border-color: var(--emerald);
+            transform: translateY(-4px);
+        }
+
+        .certificate-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .certificate-name {
+            font-size: 0.85rem;
+            color: var(--cream);
+            font-weight: 500;
+        }
+
+        @media (max-width: 1200px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carbon-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .certificates {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">EQUITY EARTH - SUPPLY CHAIN</div>
+            <a href="equity-earth-green.html" class="back-link">← Quay Lại Trang Chủ</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Supply Chain Tracker</h1>
+            <p class="page-description">
+                Theo dõi sản phẩm từ nông trại đến tay người tiêu dùng với công nghệ blockchain
+            </p>
+        </div>
+
+        <!-- Tracking Search -->
+        <div class="tracking-search">
+            <input type="text" class="tracking-input" placeholder="Nhập mã theo dõi (VD: EQER-2026-001)" value="EQER-2026-001">
+            <button class="tracking-button">Tra Cứu</button>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <h2 class="section-title">🗺️ Hành Trình Sản Phẩm</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🌱 Thu Hoạch - Nông Trại Khu A</div>
+                        <div class="timeline-time">15/01/2026 08:30 - Đồng Nai, Việt Nam</div>
+                        <div class="timeline-description">
+                            Thu hoạch 2.5 tấn sầu riêng Monthong. Kiểm tra chất lượng: Đạt chuẩn xuất khẩu. 
+                            Nhiệt độ bảo quản: 13-15°C.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🏭 Chế Biến & Đóng Gói</div>
+                        <div class="timeline-time">16/01/2026 14:00 - Nhà Máy Bình Dương</div>
+                        <div class="timeline-description">
+                            Làm sạch, phân loại theo kích thước. Đóng gói theo tiêu chuẩn GlobalGAP. 
+                            Mã lô: LO-202601-A15. Số kiện: 125.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🚛 Vận Chuyển Nội Địa</div>
+                        <div class="timeline-time">17/01/2026 06:00 - Trên Đường</div>
+                        <div class="timeline-description">
+                            Xe tải lạnh VN-51-1234 xuất phát đến cảng Cát Lái. 
+                            GPS tracking: 10.762622, 106.660172. ETA: 18/01 10:00.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🚢 Xuất Khẩu - Cảng Cát Lái</div>
+                        <div class="timeline-time">18/01/2026 14:30 - TP.HCM</div>
+                        <div class="timeline-description">
+                            Kiểm dịch thực vật hoàn tất. Container MSCU-2345678 đã lên tàu. 
+                            Vessel: MAERSK COPENHAGEN. Chuyến: VN-CN-042.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot pending">⏳</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🌊 Đang Vận Chuyển Biển</div>
+                        <div class="timeline-time">Dự kiến: 28/01/2026 - Cảng Thâm Quyến</div>
+                        <div class="timeline-description">
+                            Đang trên đường đến Trung Quốc. Thời gian di chuyển: 10 ngày. 
+                            Theo dõi container tại: maersk.com/tracking
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot pending">⏳</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🏪 Phân Phối Bán Lẻ</div>
+                        <div class="timeline-time">Dự kiến: 30/01/2026 - Hệ Thống Siêu Thị</div>
+                        <div class="timeline-description">
+                            Sản phẩm sẽ được phân phối đến hệ thống siêu thị hữu cơ ở Quảng Châu và Thâm Quyến.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info Grid -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3 class="info-card-title">📦 Thông Tin Sản Phẩm</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">Mã Sản Phẩm</span>
+                        <span class="info-value">EQER-2026-001</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Loại Sản Phẩm</span>
+                        <span class="info-value">Sầu Riêng Monthong</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Khối Lượng</span>
+                        <span class="info-value">2,500 kg</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Nông Trại</span>
+                        <span class="info-value">EQUITY EARTH Khu A</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ngày Thu Hoạch</span>
+                        <span class="info-value">15/01/2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Hạn Sử Dụng</span>
+                        <span class="info-value">15/02/2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3 class="info-card-title">📋 QR Code Xác Thực</h3>
+                <div class="qr-section">
+                    <div class="qr-code">
+                        <canvas id="qr-canvas" class="qr-canvas"></canvas>
+                    </div>
+                    <div class="verified-badge">
+                        ✓ Đã Xác Thực Blockchain
+                    </div>
+                    <p style="color: rgba(240, 253, 244, 0.6); font-size: 0.85rem; margin-top: 1rem;">
+                        Quét mã QR để xem thông tin chi tiết trên blockchain
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carbon Footprint -->
+        <div class="carbon-footprint">
+            <h3 class="section-title">🌍 Dấu Chân Carbon & Bền Vững</h3>
+            <div class="carbon-stats">
+                <div class="carbon-stat">
+                    <div class="carbon-value">1.2 kg</div>
+                    <div class="carbon-label">CO₂/kg Sản Phẩm</div>
+                </div>
+                <div class="carbon-stat">
+                    <div class="carbon-value">-35%</div>
+                    <div class="carbon-label">So Với Trung Bình Ngành</div>
+                </div>
+                <div class="carbon-stat">
+                    <div class="carbon-value">850 km</div>
+                    <div class="carbon-label">Tổng Quãng Đường</div>
+                </div>
+            </div>
+            <p style="color: rgba(240, 253, 244, 0.7); margin-top: 1.5rem; text-align: center;">
+                Sản phẩm này đạt chuẩn carbon thấp nhờ sử dụng năng lượng tái tạo và tối ưu hóa logistics.
+            </p>
+        </div>
+
+        <!-- Certificates -->
+        <div class="timeline-section">
+            <h2 class="section-title">🏆 Chứng Nhận Chất Lượng</h2>
+            <div class="certificates">
+                <div class="certificate-badge">
+                    <div class="certificate-icon">✓</div>
+                    <div class="certificate-name">GlobalGAP</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">🌿</div>
+                    <div class="certificate-name">Organic EU</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">🇻🇳</div>
+                    <div class="certificate-name">VietGAP</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">🍃</div>
+                    <div class="certificate-name">Rainforest Alliance</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">✅</div>
+                    <div class="certificate-name">ISO 22000</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">🌍</div>
+                    <div class="certificate-name">Fair Trade</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">⭐</div>
+                    <div class="certificate-name">HACCP</div>
+                </div>
+                <div class="certificate-badge">
+                    <div class="certificate-icon">🔬</div>
+                    <div class="certificate-name">Residue Free</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Generate QR Code
+            const qrCanvas = document.getElementById('qr-canvas');
+            if (qrCanvas) {
+                const ctx = qrCanvas.getContext('2d');
+                qrCanvas.width = 180;
+                qrCanvas.height = 180;
+
+                // Simple QR-like pattern
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, 180, 180);
+                
+                ctx.fillStyle = '#fff';
+                const blockSize = 6;
+                const blocks = 30;
+                
+                for (let i = 0; i < blocks; i++) {
+                    for (let j = 0; j < blocks; j++) {
+                        if (Math.random() > 0.5) {
+                            ctx.fillRect(i * blockSize, j * blockSize, blockSize - 1, blockSize - 1);
+                        }
+                    }
+                }
+
+                // Corner markers
+                ctx.fillStyle = '#10B981';
+                ctx.fillRect(0, 0, blockSize * 7, blockSize * 7);
+                ctx.fillRect(180 - blockSize * 7, 0, blockSize * 7, blockSize * 7);
+                ctx.fillRect(0, 180 - blockSize * 7, blockSize * 7, blockSize * 7);
+            }
+
+            // Animations
+            anime({
+                targets: '.timeline-item',
+                translateX: [-50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(150),
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.info-card',
+                scale: [0.95, 1],
+                opacity: [0, 1],
+                delay: anime.stagger(200),
+                duration: 1000,
+                easing: 'easeOutBack'
+            });
+
+            anime({
+                targets: '.certificate-badge',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                delay: anime.stagger(50),
+                duration: 600,
+                easing: 'easeOutBack'
+            });
+        });
+    </script>
+</body>
+</html>
