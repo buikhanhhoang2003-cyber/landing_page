@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EQUITY EARTH - Nền Tảng Đầu Tư Nông Nghiệp Blockchain</title>
+    <title>ESP32 Sensor Dashboard - Real-time Monitoring</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         :root {
@@ -21,6 +22,8 @@
             --violet: #A78BFA;
             --mint: #A7F3D0;
             --cream: #F0FDF4;
+            --red: #EF4444;
+            --orange: #F97316;
         }
 
         * {
@@ -65,7 +68,7 @@
             90% { transform: translate(-10%, 10%); }
         }
 
-        /* Animated gradient background blobs */
+        /* Background blobs */
         .bg-blob {
             position: fixed;
             border-radius: 50%;
@@ -93,15 +96,6 @@
             animation: float 15s ease-in-out infinite reverse;
         }
 
-        .bg-blob-3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, var(--purple), transparent);
-            top: 50%;
-            left: 50%;
-            animation: float 25s ease-in-out infinite;
-        }
-
         @keyframes float {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
             33% { transform: translate(50px, -50px) rotate(120deg); }
@@ -114,7 +108,7 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(10, 14, 26, 0.8);
+            background: rgba(10, 14, 26, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(16, 185, 129, 0.2);
         }
@@ -137,218 +131,58 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 0.05em;
-            text-transform: uppercase;
         }
 
-        nav {
+        .header-right {
             display: flex;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        nav a {
-            color: var(--cream);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--emerald), var(--cyan));
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover {
-            color: var(--emerald-light);
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .connect-wallet {
-            padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            border: none;
-            color: var(--deep-space);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-            border-radius: 4px;
-        }
-
-        .connect-wallet:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.5);
-        }
-
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding-top: 100px;
-        }
-
-        .hero-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 3rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            z-index: 10;
-            position: relative;
-        }
-
-        .hero-eyebrow {
-            color: var(--emerald-light);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            display: inline-block;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--cream), var(--emerald-light), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-description {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: rgba(240, 253, 244, 0.8);
-            margin-bottom: 3rem;
-            font-weight: 300;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .btn {
-            padding: 1.2rem 3rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            color: var(--deep-space);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--emerald-light);
-            border: 2px solid var(--emerald);
-        }
-
-        .btn-secondary:hover {
-            background: var(--emerald);
-            color: var(--deep-space);
-            border-color: var(--emerald);
-        }
-
-        #farm-canvas {
-            width: 100%;
-            height: 500px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            background: linear-gradient(135deg, var(--forest-dark), var(--dark-teal));
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-        }
-
-        .section {
-            padding: 8rem 3rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 6rem;
-        }
-
-        .section-eyebrow {
-            color: var(--emerald-light);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--cream), var(--emerald-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-description {
-            font-size: 1.15rem;
-            color: rgba(240, 253, 244, 0.7);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .layers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            margin-bottom: 4rem;
+            align-items: center;
         }
 
-        .layer-card {
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--emerald-light);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.offline {
+            background: var(--red);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 3rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .sensor-card {
             background: linear-gradient(135deg, rgba(26, 47, 35, 0.5), rgba(45, 74, 62, 0.5));
             border: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 3rem 2.5rem;
+            padding: 2.5rem;
             position: relative;
             overflow: hidden;
             transition: all 0.4s ease;
@@ -356,7 +190,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .layer-card::before {
+        .sensor-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -368,423 +202,250 @@
             transition: opacity 0.4s ease;
         }
 
-        .layer-card:hover {
+        .sensor-card:hover {
             transform: translateY(-8px);
             border-color: var(--emerald);
             box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
         }
 
-        .layer-card:hover::before {
+        .sensor-card:hover::before {
             opacity: 1;
         }
 
-        .layer-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 4rem;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            opacity: 0.2;
-            position: absolute;
-            top: 1rem;
-            right: 2rem;
-            font-weight: 600;
-        }
-
-        .layer-icon {
+        .sensor-icon {
             font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             display: block;
         }
 
-        .layer-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-            color: var(--emerald-light);
-            font-weight: 600;
-        }
-
-        .layer-text {
-            color: rgba(240, 253, 244, 0.8);
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(26, 47, 35, 0.5), rgba(15, 32, 39, 0.5));
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 3rem;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-        }
-
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 0;
-            background: linear-gradient(180deg, var(--emerald), var(--cyan), var(--purple));
-            transition: height 0.4s ease;
-        }
-
-        .feature-card:hover::after {
-            height: 100%;
-        }
-
-        .feature-label {
+        .sensor-label {
             color: var(--emerald-light);
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .feature-title {
+        .sensor-value {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
             color: var(--cream);
             font-weight: 600;
         }
 
-        .feature-list {
-            list-style: none;
+        .sensor-unit {
+            font-size: 0.9rem;
+            color: rgba(240, 253, 244, 0.6);
         }
 
-        .feature-list li {
-            padding-left: 2rem;
-            margin-bottom: 1rem;
-            position: relative;
-            color: rgba(240, 253, 244, 0.8);
-            font-weight: 300;
-        }
-
-        .feature-list li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--emerald-light);
-            font-weight: 600;
-        }
-
-        .feature-button {
-            display: inline-block;
-            padding: 0.75rem 1.75rem;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            color: var(--deep-space);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+        .sensor-meta {
             margin-top: 1.5rem;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            font-size: 0.85rem;
+            color: rgba(240, 253, 244, 0.6);
         }
 
-        .feature-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-        }
-
-        .feature-button.disabled {
-            background: rgba(45, 74, 62, 0.5);
-            color: rgba(240, 253, 244, 0.5);
-            cursor: not-allowed;
-            box-shadow: none;
-            pointer-events: none;
-        }
-
-        .coming-soon {
+        .sensor-status {
             display: inline-block;
-            margin-left: 0.75rem;
             padding: 0.3rem 0.75rem;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid var(--purple);
-            color: var(--violet);
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--emerald);
+            color: var(--emerald-light);
             font-size: 0.7rem;
             font-weight: 600;
             border-radius: 12px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-right: 0.5rem;
         }
 
-        .user-flow {
-            background: linear-gradient(135deg, rgba(45, 74, 62, 0.3), rgba(15, 32, 39, 0.3));
-            padding: 6rem 3rem;
-            margin-top: 4rem;
-            border-top: 1px solid rgba(16, 185, 129, 0.3);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.3);
-            backdrop-filter: blur(10px);
+        .sensor-status.warning {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: var(--orange);
+            color: var(--orange);
         }
 
-        .flow-steps {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        .sensor-status.critical {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--red);
+            color: var(--red);
         }
 
-        .flow-step {
-            text-align: center;
-            position: relative;
+        .section {
+            margin-bottom: 4rem;
         }
 
-        .flow-step::after {
-            content: '→';
-            position: absolute;
-            top: 30px;
-            right: -2rem;
+        .section-title {
+            font-family: 'Playfair Display', serif;
             font-size: 2rem;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--cream), var(--emerald-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            opacity: 0.5;
-        }
-
-        .flow-step:last-child::after {
-            display: none;
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
             font-weight: 600;
-            color: var(--deep-space);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
         }
 
-        .step-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--emerald-light);
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.05em;
-        }
-
-        .step-description {
-            font-size: 0.85rem;
-            color: rgba(240, 253, 244, 0.7);
-            font-weight: 300;
-        }
-
-        /* Team Section */
-        .team-grid {
+        .charts-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2.5rem;
-            margin-top: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
         }
 
-        .team-member {
-            text-align: center;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-
-        .team-member:hover {
-            transform: translateY(-10px);
-        }
-
-        .member-avatar {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--emerald), var(--cyan), var(--purple));
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            border: 3px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .team-member:hover .member-avatar {
-            box-shadow: 0 15px 50px rgba(16, 185, 129, 0.5);
-            border-color: var(--emerald);
-        }
-
-        .member-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            color: var(--cream);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .member-role {
-            color: var(--emerald-light);
-            font-size: 0.9rem;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .member-bio {
-            color: rgba(240, 253, 244, 0.7);
-            font-size: 0.85rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        .stats-section {
-            background: rgba(10, 14, 26, 0.5);
-            padding: 6rem 3rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stat-item {
-            padding: 2rem;
+        .chart-container {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.5), rgba(45, 74, 62, 0.5));
             border: 1px solid rgba(16, 185, 129, 0.2);
-            background: linear-gradient(135deg, rgba(26, 47, 35, 0.3), rgba(15, 32, 39, 0.3));
-            transition: all 0.3s ease;
+            padding: 2rem;
             border-radius: 8px;
             backdrop-filter: blur(10px);
         }
 
-        .stat-item:hover {
-            border-color: var(--emerald);
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        .stat-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
+        .chart-title {
             font-weight: 600;
+            color: var(--emerald-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
         }
 
-        .stat-label {
-            color: rgba(240, 253, 244, 0.7);
-            font-size: 0.9rem;
-            letter-spacing: 0.05em;
+        .logs-container {
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.5), rgba(45, 74, 62, 0.5));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            max-height: 400px;
+            overflow-y: auto;
         }
 
-        footer {
-            padding: 4rem 3rem;
-            text-align: center;
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--emerald-light), var(--cyan), var(--violet));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        .footer-text {
-            color: rgba(240, 253, 244, 0.5);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links a {
-            color: rgba(240, 253, 244, 0.7);
-            text-decoration: none;
+        .log-entry {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
             font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            transition: color 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .footer-links a:hover {
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--emerald-light);
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .log-message {
+            color: rgba(240, 253, 244, 0.7);
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .log-type {
+            padding: 0.25rem 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
             color: var(--emerald-light);
         }
 
-        .copyright {
-            color: rgba(240, 253, 244, 0.4);
-            font-size: 0.8rem;
-            margin-top: 2rem;
+        .btn {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--emerald), var(--cyan));
+            border: none;
+            color: var(--deep-space);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
         }
 
-        @media (max-width: 1024px) {
-            .hero-content {
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: var(--emerald-light);
+            border: 2px solid var(--emerald);
+        }
+
+        .btn.secondary:hover {
+            background: var(--emerald);
+            color: var(--deep-space);
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .line-status {
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(26, 47, 35, 0.5), rgba(45, 74, 62, 0.5));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .line-icon {
+            font-size: 1.5rem;
+        }
+
+        .line-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .line-label {
+            color: var(--emerald-light);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .line-message {
+            color: rgba(240, 253, 244, 0.8);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .main-container {
+                padding: 80px 1.5rem 2rem;
+            }
+
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
 
-            h1 {
-                font-size: 3rem;
-            }
-
-            .layers-grid {
+            .charts-grid {
                 grid-template-columns: 1fr;
             }
 
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .flow-steps {
-                grid-template-columns: 1fr;
-            }
-
-            .flow-step::after {
-                display: none;
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            nav {
-                display: none;
+            .sensor-value {
+                font-size: 2rem;
             }
         }
     </style>
@@ -792,564 +453,508 @@
 <body>
     <div class="bg-blob bg-blob-1"></div>
     <div class="bg-blob bg-blob-2"></div>
-    <div class="bg-blob bg-blob-3"></div>
 
     <header>
         <div class="header-content">
-            <div class="logo">EQUITY EARTH</div>
-            <nav>
-                <a href="#platform">Nền Tảng</a>
-                <a href="#features">Tính Năng</a>
-                <a href="#team">Đội Ngũ</a>
-                <a href="#about">Về Chúng Tôi</a>
-            </nav>
-            <button class="connect-wallet">Kết Nối Ví</button>
+            <div class="logo">ESP32 DASHBOARD</div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Connected</span>
+                </div>
+                <div class="line-status">
+                    <div class="line-icon">💬</div>
+                    <div class="line-info">
+                        <div class="line-label">Line Status</div>
+                        <div class="line-message" id="lineStatus">Ready</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <div class="hero-eyebrow">Đầu Tư Nông Nghiệp Blockchain</div>
-                <h1>Dân Chủ Hóa Quyền Sở Hữu Nông Trại</h1>
-                <p class="hero-description">
-                    Đầu tư vào tài sản nông nghiệp thực thông qua NFT. Giám sát nông trại theo thời gian thực, 
-                    tham gia quản trị, và nhận lợi nhuận minh bạch từ canh tác bền vững.
-                </p>
-                <div class="cta-group">
-                    <a href="#" class="btn btn-primary">Xem Dự Án</a>
-                    <a href="#" class="btn btn-secondary">Tìm Hiểu Thêm</a>
+    <div class="main-container">
+        <!-- Control Panel -->
+        <div class="section">
+            <div class="control-panel">
+                <button class="btn" id="refreshBtn">🔄 Refresh Data</button>
+                <button class="btn secondary" id="exportBtn">📥 Export Data</button>
+                <button class="btn secondary" id="clearLogsBtn">🗑️ Clear Logs</button>
+            </div>
+        </div>
+
+        <!-- Real-time Sensors -->
+        <div class="section">
+            <h2 class="section-title">Real-Time Sensor Readings</h2>
+            <div class="dashboard-grid">
+                <div class="sensor-card">
+                    <div class="sensor-icon">🌡️</div>
+                    <div class="sensor-label">Temperature</div>
+                    <div class="sensor-value"><span id="temp">--</span></div>
+                    <div class="sensor-unit">°C</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="tempStatus">Normal</div>
+                        <div>Last update: <span id="tempTime">--:--:--</span></div>
+                    </div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">💧</div>
+                    <div class="sensor-label">Humidity</div>
+                    <div class="sensor-value"><span id="humidity">--</span></div>
+                    <div class="sensor-unit">%</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="humidityStatus">Normal</div>
+                        <div>Last update: <span id="humidityTime">--:--:--</span></div>
+                    </div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">🌱</div>
+                    <div class="sensor-label">Soil Moisture</div>
+                    <div class="sensor-value"><span id="moisture">--</span></div>
+                    <div class="sensor-unit">%</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="moistureStatus">Normal</div>
+                        <div>Last update: <span id="moistureTime">--:--:--</span></div>
+                    </div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">🧪</div>
+                    <div class="sensor-label">Soil pH</div>
+                    <div class="sensor-value"><span id="ph">--</span></div>
+                    <div class="sensor-unit">pH</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="phStatus">Normal</div>
+                        <div>Last update: <span id="phTime">--:--:--</span></div>
+                    </div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">☀️</div>
+                    <div class="sensor-label">Light Intensity</div>
+                    <div class="sensor-value"><span id="light">--</span></div>
+                    <div class="sensor-unit">lux</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="lightStatus">Normal</div>
+                        <div>Last update: <span id="lightTime">--:--:--</span></div>
+                    </div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">📡</div>
+                    <div class="sensor-label">Signal Strength</div>
+                    <div class="sensor-value"><span id="signal">--</span></div>
+                    <div class="sensor-unit">dBm</div>
+                    <div class="sensor-meta">
+                        <div class="sensor-status" id="signalStatus">Good</div>
+                        <div>Last scan: <span id="signalTime">--:--:--</span></div>
+                    </div>
                 </div>
             </div>
-            <div class="hero-right">
-                <canvas id="farm-canvas"></canvas>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="platform">
-        <div class="section-header">
-            <div class="section-eyebrow">Kiến Trúc Ba Tầng</div>
-            <h2 class="section-title">Nền Tảng EQUITY EARTH</h2>
-            <p class="section-description">
-                Nền tảng của chúng tôi tích hợp IoT, AI và Blockchain để tạo ra một hệ sinh thái 
-                đầu tư nông nghiệp minh bạch, hiệu quả và dân chủ.
-            </p>
         </div>
 
-        <div class="layers-grid">
-            <div class="layer-card">
-                <div class="layer-number">01</div>
-                <div class="layer-icon">🛰️</div>
-                <h3 class="layer-title">Tầng Vật Lý</h3>
-                <p class="layer-text">
-                    Cảm biến IoT và công nghệ drone thu thập dữ liệu thời gian thực về độ ẩm đất, pH, 
-                    sức khỏe cây trồng và phát hiện sâu bệnh. Giám sát liên tục đảm bảo điều kiện canh tác tối ưu.
-                </p>
-            </div>
-
-            <div class="layer-card">
-                <div class="layer-number">02</div>
-                <div class="layer-icon">🤖</div>
-                <h3 class="layer-title">Tầng Trí Tuệ</h3>
-                <p class="layer-text">
-                    Thuật toán AI tiên tiến phân tích dữ liệu để đưa ra khuyến nghị hành động, 
-                    dự đoán năng suất, phát hiện bệnh sớm và tự động hóa quy trình canh tác để đạt hiệu quả tối đa.
-                </p>
-            </div>
-
-            <div class="layer-card">
-                <div class="layer-number">03</div>
-                <div class="layer-icon">⛓️</div>
-                <h3 class="layer-title">Tầng Blockchain</h3>
-                <p class="layer-text">
-                    Token hóa tài sản qua NFT đảm bảo quyền sở hữu minh bạch, hợp đồng thông minh tự động phân phối lợi nhuận, 
-                    và quản trị phi tập trung trao quyền cho nhà đầu tư đưa ra quyết định canh tác.
-                </p>
+        <!-- Charts -->
+        <div class="section">
+            <h2 class="section-title">Historical Data</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Temperature Trend (Last 24h)</div>
+                    <canvas id="tempChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Humidity Trend (Last 24h)</div>
+                    <canvas id="humidityChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Soil Moisture Trend (Last 24h)</div>
+                    <canvas id="moistureChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Soil pH Trend (Last 24h)</div>
+                    <canvas id="phChart"></canvas>
+                </div>
             </div>
         </div>
-    </section>
 
-    <section class="section" id="features">
-        <div class="section-header">
-            <div class="section-eyebrow">Tính Năng Nền Tảng</div>
-            <h2 class="section-title">Hệ Sinh Thái Đầu Tư Hoàn Chỉnh</h2>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-label">Bảng Điều Khiển</div>
-                <h3 class="feature-title">Giao Diện Nhà Đầu Tư</h3>
-                <ul class="feature-list">
-                    <li>Tích hợp luồng camera và drone trực tiếp với bản đồ nhiệt</li>
-                    <li>Dashboard chỉ số thời gian thực (độ ẩm, pH đất, sức khỏe cây trồng)</li>
-                    <li>Hệ thống bỏ phiếu quản trị cho các quyết định canh tác</li>
-                    <li>Chọn loại phân bón dựa trên đề xuất AI</li>
-                    <li>Lựa chọn người mua và sản phẩm đầu ra từ danh sách được tuyển chọn</li>
-                </ul>
-                <a href="equity-earth-dashboard.html" class="feature-button">Xem Dashboard</a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-label">Blockchain</div>
-                <h3 class="feature-title">Quản Lý Tài Sản</h3>
-                <ul class="feature-list">
-                    <li>Thị trường NFT - mỗi token đại diện cho 1 hecta đất canh tác</li>
-                    <li>Hợp đồng thông minh minh bạch hiển thị cơ chế chia sẻ lợi nhuận</li>
-                    <li>Bảo hiểm on-chain và giảm thiểu rủi ro thông qua quỹ dự phòng</li>
-                    <li>Giao dịch thị trường thứ cấp để đảm bảo thanh khoản</li>
-                    <li>Phân phối cổ tức tự động bằng stablecoin hoặc token</li>
-                </ul>
-                <a href="equity-earth-nft-marketplace.html" class="feature-button">Xem NFT Marketplace</a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-label">AI Engine</div>
-                <h3 class="feature-title">Khuyến Nghị Thông Minh</h3>
-                <ul class="feature-list">
-                    <li>Phát hiện sâu bệnh tự động với đề xuất phương pháp xử lý</li>
-                    <li>Dự đoán năng suất và theo dõi hiệu suất so với chỉ tiêu</li>
-                    <li>Cơ hội mở rộng dựa trên chỉ số hiệu suất</li>
-                    <li>Phân tích thị trường để tối ưu thời điểm thu hoạch</li>
-                    <li>Thuật toán tối ưu hóa tài nguyên nước và phân bón</li>
-                </ul>
-                <a href="equity-earth-ai-engine.html" class="feature-button">Xem AI Engine</a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-label">Truy Xuất Nguồn Gốc</div>
-                <h3 class="feature-title">Theo Dõi Chuỗi Cung Ứng</h3>
-                <ul class="feature-list">
-                    <li>Theo dõi sản phẩm từ đầu đến cuối từ nông trại đến người tiêu dùng</li>
-                    <li>Chứng nhận chất lượng và tài liệu tuân thủ</li>
-                    <li>Tính toán dấu chân carbon và chỉ số bền vững</li>
-                    <li>Báo cáo thu hoạch với bằng chứng hình ảnh</li>
-                    <li>Logistics phân phối và xác nhận giao hàng</li>
-                </ul>
-                <a href="equity-earth-supply-chain.html" class="feature-button">Xem Supply Chain Tracker</a>
-            </div>
-        </div>
-    </section>
-
-    <div class="user-flow">
-        <div class="section-header">
-            <div class="section-eyebrow">Hành Trình Người Dùng</div>
-            <h2 class="section-title">Từ Đầu Tư Đến Thu Hoạch</h2>
-        </div>
-
-        <div class="flow-steps">
-            <div class="flow-step">
-                <div class="step-number">1</div>
-                <div class="step-title">Kết Nối</div>
-                <div class="step-description">Liên kết ví (MetaMask/Phantom) để xác minh danh tính</div>
-            </div>
-
-            <div class="flow-step">
-                <div class="step-number">2</div>
-                <div class="step-title">Chọn Lựa</div>
-                <div class="step-description">Xem các dự án có sẵn và bản đồ nông trại 3D</div>
-            </div>
-
-            <div class="flow-step">
-                <div class="step-number">3</div>
-                <div class="step-title">Đầu Tư</div>
-                <div class="step-description">Mua NFT đại diện cho quyền sở hữu đất canh tác</div>
-            </div>
-
-            <div class="flow-step">
-                <div class="step-number">4</div>
-                <div class="step-title">Quản Trị</div>
-                <div class="step-description">Bỏ phiếu về các quyết định canh tác hàng ngày</div>
-            </div>
-
-            <div class="flow-step">
-                <div class="step-number">5</div>
-                <div class="step-title">Thu Nhập</div>
-                <div class="step-description">Theo dõi thu hoạch và nhận lợi nhuận vào ví</div>
+        <!-- Activity Logs -->
+        <div class="section">
+            <h2 class="section-title">Activity Logs & Notifications</h2>
+            <div class="logs-container" id="logsContainer">
+                <div class="log-entry">
+                    <div class="log-time">--:--:--</div>
+                    <div class="log-message">Waiting for sensor data...</div>
+                    <div class="log-type">info</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <section class="section" id="team">
-        <div class="section-header">
-            <div class="section-eyebrow">Đội Ngũ Của Chúng Tôi</div>
-            <h2 class="section-title">Những Người Tiên Phong</h2>
-            <p class="section-description">
-                Đội ngũ chuyên gia đa lĩnh vực với kinh nghiệm sâu về blockchain, nông nghiệp, 
-                và công nghệ AI cam kết cách mạng hóa ngành nông nghiệp.
-            </p>
-        </div>
-
-        <div class="team-grid">
-            <div class="team-member">
-                <div class="member-avatar">👨‍💼</div>
-                <h3 class="member-name">Nguyễn Văn An</h3>
-                <div class="member-role">CEO & Đồng Sáng Lập</div>
-                <p class="member-bio">15 năm kinh nghiệm trong nông nghiệp công nghệ cao và quản lý dự án quy mô lớn</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👩‍💻</div>
-                <h3 class="member-name">Trần Thị Minh</h3>
-                <div class="member-role">CTO & Blockchain Lead</div>
-                <p class="member-bio">Chuyên gia blockchain với 10 năm phát triển smart contracts và DeFi</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👨‍🔬</div>
-                <h3 class="member-name">Lê Hoàng Nam</h3>
-                <div class="member-role">AI/ML Director</div>
-                <p class="member-bio">Tiến sĩ về Machine Learning, chuyên về computer vision và phân tích dữ liệu nông nghiệp</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👩‍🌾</div>
-                <h3 class="member-name">Phạm Thu Hà</h3>
-                <div class="member-role">Giám Đốc Nông Nghiệp</div>
-                <p class="member-bio">Kỹ sư nông nghiệp với 12 năm kinh nghiệm canh tác bền vững và IoT</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👨‍💼</div>
-                <h3 class="member-name">Hoàng Minh Tuấn</h3>
-                <div class="member-role">CFO</div>
-                <p class="member-bio">Chuyên gia tài chính với kinh nghiệm quản lý quỹ đầu tư và tokenomics</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👩‍🎨</div>
-                <h3 class="member-name">Vũ Thị Lan</h3>
-                <div class="member-role">Head of Design</div>
-                <p class="member-bio">Chuyên gia UX/UI với đam mê tạo ra trải nghiệm người dùng xuất sắc</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👨‍🔧</div>
-                <h3 class="member-name">Đỗ Quang Huy</h3>
-                <div class="member-role">IoT & Hardware Lead</div>
-                <p class="member-bio">Kỹ sư điện tử chuyên về hệ thống cảm biến và thiết bị IoT cho nông nghiệp</p>
-            </div>
-
-            <div class="team-member">
-                <div class="member-avatar">👩‍💼</div>
-                <h3 class="member-name">Ngô Thu Trang</h3>
-                <div class="member-role">Community Manager</div>
-                <p class="member-bio">Chuyên gia xây dựng cộng đồng và phát triển quan hệ đối tác chiến lược</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="stats-section">
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-number">100ha</div>
-                <div class="stat-label">Tổng Diện Tích Nông Trại</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">1,000+</div>
-                <div class="stat-label">Nhà Đầu Tư Tích Cực</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Giám Sát Thời Gian Thực</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">92%</div>
-                <div class="stat-label">Tham Gia Quản Trị</div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">EQUITY EARTH</div>
-            <p class="footer-text">Cách mạng hóa đầu tư nông nghiệp thông qua công nghệ blockchain</p>
-            
-            <div class="footer-links">
-                <a href="#">Whitepaper</a>
-                <a href="#">Tài Liệu</a>
-                <a href="#">Cộng Đồng</a>
-                <a href="#">Hỗ Trợ</a>
-            </div>
-            
-            <p class="copyright">&copy; 2026 EQUITY EARTH. Bản quyền được bảo hộ.</p>
-        </div>
-    </footer>
-
     <script>
-        // Wait for DOM to be ready
-        window.addEventListener('DOMContentLoaded', () => {
-            // Canvas 2D Farm Visualization (fallback - works everywhere)
-            const canvas = document.getElementById('farm-canvas');
-            if (!canvas) {
-                console.error('Farm canvas not found');
-                return;
-            }
+        // Configuration
+        const API_BASE = '/api'; // Change to your backend URL
+        const REFRESH_INTERVAL = 5000; // 5 seconds
+        const CHART_HISTORY_POINTS = 288; // 24 hours at 5-min intervals
 
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+        // State
+        let sensorData = {
+            temperature: 0,
+            humidity: 0,
+            moisture: 0,
+            ph: 0,
+            light: 0,
+            signal: 0
+        };
 
-            // Create farm plots data
-            const plots = [];
-            const colors = ['#10B981', '#34D399', '#059669', '#06B6D4', '#8B5CF6'];
-            
-            for (let x = 0; x < 10; x++) {
-                for (let z = 0; z < 10; z++) {
-                    plots.push({
-                        x: x,
-                        z: z,
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        offset: Math.random() * Math.PI * 2,
-                        size: 30 + Math.random() * 10
-                    });
+        let logs = [];
+        let chartData = {
+            temperature: [],
+            humidity: [],
+            moisture: [],
+            ph: []
+        };
+
+        // Chart instances
+        let charts = {};
+
+        // Thresholds for warnings/alerts
+        const THRESHOLDS = {
+            temperature: { min: 15, max: 35, critical: { min: 10, max: 40 } },
+            humidity: { min: 30, max: 80, critical: { min: 20, max: 90 } },
+            moisture: { min: 40, max: 70, critical: { min: 30, max: 80 } },
+            ph: { min: 6.0, max: 7.5, critical: { min: 5.5, max: 8.0 } },
+            light: { min: 5000, max: 50000, critical: { min: 1000, max: 100000 } }
+        };
+
+        // Initialize charts
+        function initCharts() {
+            const defaultConfig = {
+                type: 'line',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: {
+                                color: 'rgba(16, 185, 129, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(240, 253, 244, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(16, 185, 129, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(240, 253, 244, 0.7)'
+                            }
+                        }
+                    }
                 }
-            }
-
-            let time = 0;
-            let angle = 0;
-
-            function draw() {
-                // Clear with gradient background
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, '#1A2F23');
-                gradient.addColorStop(0.5, '#0F2027');
-                gradient.addColorStop(1, '#2D4A3E');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw grid lines
-                ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
-                ctx.lineWidth = 1;
-                for (let i = 0; i < 10; i++) {
-                    const y = 100 + i * 30;
-                    ctx.beginPath();
-                    ctx.moveTo(50, y);
-                    ctx.lineTo(canvas.width - 50, y);
-                    ctx.stroke();
-                }
-
-                // Calculate perspective
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const scale = 1.2;
-
-                // Sort plots by depth for proper rendering
-                const sortedPlots = plots.slice().sort((a, b) => {
-                    const rotatedA = rotatePoint(a.x, a.z, angle);
-                    const rotatedB = rotatePoint(b.x, b.z, angle);
-                    return rotatedA.z - rotatedB.z;
-                });
-
-                // Draw plots
-                sortedPlots.forEach((plot, i) => {
-                    // Rotate plot position
-                    const rotated = rotatePoint(plot.x - 4.5, plot.z - 4.5, angle);
-                    
-                    // Simple perspective projection
-                    const perspective = 1 / (1 + rotated.z * 0.05);
-                    const screenX = centerX + rotated.x * 40 * scale * perspective;
-                    const screenY = centerY + rotated.z * 20 * scale * perspective;
-                    
-                    // Wave effect
-                    const wave = Math.sin(time + plot.offset) * 5;
-                    const size = plot.size * perspective;
-                    
-                    // Draw plot with glow effect
-                    ctx.save();
-                    
-                    // Glow
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = plot.color;
-                    
-                    // Main shape
-                    ctx.fillStyle = plot.color;
-                    ctx.globalAlpha = 0.7 + Math.sin(time + plot.offset) * 0.2;
-                    
-                    // Draw diamond shape
-                    ctx.beginPath();
-                    ctx.moveTo(screenX, screenY - size/2 + wave);
-                    ctx.lineTo(screenX + size/2, screenY + wave);
-                    ctx.lineTo(screenX, screenY + size/2 + wave);
-                    ctx.lineTo(screenX - size/2, screenY + wave);
-                    ctx.closePath();
-                    ctx.fill();
-                    
-                    // Draw highlight
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                    ctx.beginPath();
-                    ctx.arc(screenX - size/4, screenY - size/4 + wave, size/6, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    ctx.restore();
-                });
-
-                // Draw title overlay
-                ctx.save();
-                ctx.font = 'bold 18px "Playfair Display", serif';
-                ctx.fillStyle = 'rgba(16, 185, 129, 0.8)';
-                ctx.fillText('100 ha Nông Trại Số', 20, 30);
-                ctx.font = '14px "Outfit", sans-serif';
-                ctx.fillStyle = 'rgba(240, 253, 244, 0.6)';
-                ctx.fillText('Visualization 3D Interactive', 20, 50);
-                ctx.restore();
-
-                // Update animation
-                time += 0.03;
-                angle += 0.005;
-
-                requestAnimationFrame(draw);
-            }
-
-            function rotatePoint(x, z, angle) {
-                const cos = Math.cos(angle);
-                const sin = Math.sin(angle);
-                return {
-                    x: x * cos - z * sin,
-                    z: x * sin + z * cos
-                };
-            }
-
-            draw();
-
-            // Handle resize
-            window.addEventListener('resize', () => {
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-            });
-        }); // End DOMContentLoaded
-
-        // Anime.js animations - also wait for DOM
-        window.addEventListener('DOMContentLoaded', () => {
-            const animateOnScroll = () => {
-                anime({
-                    targets: '.layer-card',
-                    translateY: [50, 0],
-                    opacity: [0, 1],
-                    delay: anime.stagger(200),
-                    duration: 1000,
-                    easing: 'easeOutExpo'
-                });
-
-                anime({
-                    targets: '.feature-card',
-                    scale: [0.9, 1],
-                    opacity: [0, 1],
-                    delay: anime.stagger(150),
-                    duration: 800,
-                    easing: 'easeOutQuad'
-                });
-
-                anime({
-                    targets: '.team-member',
-                    translateY: [60, 0],
-                    opacity: [0, 1],
-                    delay: anime.stagger(100),
-                    duration: 1200,
-                    easing: 'easeOutExpo'
-                });
-
-                anime({
-                    targets: '.stat-item',
-                    scale: [0.8, 1],
-                    opacity: [0, 1],
-                    delay: anime.stagger(100),
-                    duration: 800,
-                    easing: 'easeOutBack'
-                });
             };
 
-        // Trigger animations when sections come into view
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateOnScroll();
+            // Temperature Chart
+            charts.temperature = new Chart(document.getElementById('tempChart'), {
+                ...defaultConfig,
+                data: {
+                    labels: generateLabels(),
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: chartData.temperature,
+                        borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
                 }
             });
-        }, { threshold: 0.1 });
 
-        const sections = document.querySelectorAll('.section');
-        if (sections.length > 0) {
-            sections.forEach(section => {
-                observer.observe(section);
+            // Humidity Chart
+            charts.humidity = new Chart(document.getElementById('humidityChart'), {
+                ...defaultConfig,
+                data: {
+                    labels: generateLabels(),
+                    datasets: [{
+                        label: 'Humidity (%)',
+                        data: chartData.humidity,
+                        borderColor: '#06B6D4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                }
+            });
+
+            // Moisture Chart
+            charts.moisture = new Chart(document.getElementById('moistureChart'), {
+                ...defaultConfig,
+                data: {
+                    labels: generateLabels(),
+                    datasets: [{
+                        label: 'Soil Moisture (%)',
+                        data: chartData.moisture,
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                }
+            });
+
+            // pH Chart
+            charts.ph = new Chart(document.getElementById('phChart'), {
+                ...defaultConfig,
+                data: {
+                    labels: generateLabels(),
+                    datasets: [{
+                        label: 'Soil pH',
+                        data: chartData.ph,
+                        borderColor: '#8B5CF6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                }
             });
         }
 
-        // Animate hero elements on load
-        const heroLeftElements = document.querySelectorAll('.hero-left > *');
-        if (heroLeftElements.length > 0) {
-            anime({
-                targets: '.hero-left > *',
-                translateX: [-50, 0],
-                opacity: [0, 1],
-                delay: anime.stagger(200, {start: 300}),
-                duration: 1000,
-                easing: 'easeOutExpo'
+        // Generate time labels for charts
+        function generateLabels() {
+            const now = new Date();
+            const labels = [];
+            for (let i = CHART_HISTORY_POINTS - 1; i >= 0; i--) {
+                const time = new Date(now - i * 5 * 60000);
+                labels.push(time.toLocaleTimeString());
+            }
+            return labels;
+        }
+
+        // Update charts with new data
+        function updateCharts() {
+            Object.keys(charts).forEach(key => {
+                charts[key].data.labels = generateLabels();
+                charts[key].data.datasets[0].data = chartData[key];
+                charts[key].update();
             });
         }
 
-        const farmCanvas = document.getElementById('farm-canvas');
-        if (farmCanvas) {
-            anime({
-                targets: '#farm-canvas',
-                translateX: [50, 0],
-                opacity: [0, 1],
-                duration: 1200,
-                delay: 500,
-                easing: 'easeOutExpo'
+        // Add log entry
+        function addLog(message, type = 'info') {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            
+            const logEntry = {
+                time: timeStr,
+                message: message,
+                type: type
+            };
+            
+            logs.unshift(logEntry);
+            if (logs.length > 50) logs.pop(); // Keep max 50 logs
+
+            renderLogs();
+        }
+
+        // Render logs
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            container.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <div class="log-time">${log.time}</div>
+                    <div class="log-message">${log.message}</div>
+                    <div class="log-type">${log.type}</div>
+                </div>
+            `).join('');
+        }
+
+        // Check sensor thresholds
+        function checkThresholds() {
+            const checks = [
+                { key: 'temperature', value: sensorData.temperature, element: 'tempStatus' },
+                { key: 'humidity', value: sensorData.humidity, element: 'humidityStatus' },
+                { key: 'moisture', value: sensorData.moisture, element: 'moistureStatus' },
+                { key: 'ph', value: sensorData.ph, element: 'phStatus' },
+                { key: 'light', value: sensorData.light, element: 'lightStatus' }
+            ];
+
+            checks.forEach(check => {
+                const threshold = THRESHOLDS[check.key];
+                const element = document.getElementById(check.element);
+                
+                if (check.value < threshold.critical.min || check.value > threshold.critical.max) {
+                    element.textContent = 'Critical';
+                    element.className = 'sensor-status critical';
+                    addLog(`⚠️ Critical: ${check.key} is ${check.value}`, 'alert');
+                } else if (check.value < threshold.min || check.value > threshold.max) {
+                    element.textContent = 'Warning';
+                    element.className = 'sensor-status warning';
+                    addLog(`⚠️ Warning: ${check.key} is ${check.value}`, 'warning');
+                } else {
+                    element.textContent = 'Normal';
+                    element.className = 'sensor-status';
+                }
             });
         }
 
-        // Connect Wallet Button
-        const connectWalletBtn = document.querySelector('.connect-wallet');
-        if (connectWalletBtn) {
-            connectWalletBtn.addEventListener('click', () => {
-                anime({
-                    targets: '.connect-wallet',
-                    scale: [1, 0.95, 1.05, 1],
-                    duration: 500,
-                    easing: 'easeInOutQuad'
+        // Format sensor data
+        function updateSensorDisplay() {
+            document.getElementById('temp').textContent = sensorData.temperature.toFixed(1);
+            document.getElementById('tempTime').textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('humidity').textContent = sensorData.humidity.toFixed(0);
+            document.getElementById('humidityTime').textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('moisture').textContent = sensorData.moisture.toFixed(0);
+            document.getElementById('moistureTime').textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('ph').textContent = sensorData.ph.toFixed(1);
+            document.getElementById('phTime').textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('light').textContent = sensorData.light.toFixed(0);
+            document.getElementById('lightTime').textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('signal').textContent = sensorData.signal.toFixed(0);
+            document.getElementById('signalTime').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Fetch sensor data
+        async function fetchSensorData() {
+            try {
+                const response = await fetch(`${API_BASE}/sensors/latest`);
+                if (!response.ok) throw new Error('Failed to fetch');
+                
+                const data = await response.json();
+                sensorData = {
+                    temperature: parseFloat(data.temperature) || 0,
+                    humidity: parseFloat(data.humidity) || 0,
+                    moisture: parseFloat(data.soil_moisture) || 0,
+                    ph: parseFloat(data.soil_ph) || 0,
+                    light: parseFloat(data.light_intensity) || 0,
+                    signal: parseFloat(data.signal_strength) || 0
+                };
+
+                // Add to chart data
+                chartData.temperature.push(sensorData.temperature);
+                chartData.humidity.push(sensorData.humidity);
+                chartData.moisture.push(sensorData.moisture);
+                chartData.ph.push(sensorData.ph);
+
+                // Trim to history limit
+                Object.keys(chartData).forEach(key => {
+                    if (chartData[key].length > CHART_HISTORY_POINTS) {
+                        chartData[key].shift();
+                    }
                 });
-                alert('Kết nối ví sẽ tích hợp với MetaMask/Phantom');
-            });
+
+                updateSensorDisplay();
+                checkThresholds();
+                updateCharts();
+
+                // Update connection status
+                document.getElementById('statusDot').className = 'status-dot';
+                document.getElementById('statusText').textContent = 'Connected';
+                addLog('✓ Data refreshed successfully', 'success');
+
+            } catch (error) {
+                console.error('Error fetching sensor data:', error);
+                document.getElementById('statusDot').className = 'status-dot offline';
+                document.getElementById('statusText').textContent = 'Offline';
+                addLog('✗ Failed to fetch data: ' + error.message, 'error');
+            }
         }
 
-        // Floating animation for gradient blobs
-        const blob1 = document.querySelector('.bg-blob-1');
-        if (blob1) {
-            anime({
-                targets: '.bg-blob-1',
-                translateX: [0, 30, -30, 0],
-                translateY: [0, -40, 40, 0],
-                duration: 20000,
-                easing: 'easeInOutSine',
-                loop: true
-            });
+        // Send to Line
+        async function sendToLine(message) {
+            try {
+                const response = await fetch(`${API_BASE}/line/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('lineStatus').textContent = 'Sent ✓';
+                    addLog('📤 Message sent to Line', 'success');
+                }
+            } catch (error) {
+                console.error('Error sending to Line:', error);
+                document.getElementById('lineStatus').textContent = 'Error ✗';
+                addLog('📤 Failed to send to Line', 'error');
+            }
         }
 
-        const blob2 = document.querySelector('.bg-blob-2');
-        if (blob2) {
+        // Event Listeners
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            fetchSensorData();
             anime({
-                targets: '.bg-blob-2',
-                translateX: [0, -40, 40, 0],
-                translateY: [0, 30, -30, 0],
-                duration: 15000,
-                easing: 'easeInOutSine',
-                loop: true
+                targets: '#refreshBtn',
+                rotate: [0, 360],
+                duration: 600,
+                easing: 'easeInOutQuad'
             });
-        }
+        });
 
-        const blob3 = document.querySelector('.bg-blob-3');
-        if (blob3) {
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const dataStr = JSON.stringify({
+                timestamp: new Date().toISOString(),
+                sensorData: sensorData,
+                chartData: chartData,
+                logs: logs
+            }, null, 2);
+            
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sensor-data-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        });
+
+        document.getElementById('clearLogsBtn').addEventListener('click', () => {
+            logs = [];
+            renderLogs();
+            addLog('Logs cleared', 'info');
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            addLog('Dashboard initialized', 'info');
+            fetchSensorData();
+            
+            // Auto-refresh every REFRESH_INTERVAL
+            setInterval(fetchSensorData, REFRESH_INTERVAL);
+
+            // Auto-send to Line every 30 seconds (change interval as needed)
+            setInterval(() => {
+                const message = `🌱 Farm Update\n🌡️ Temp: ${sensorData.temperature.toFixed(1)}°C\n💧 Humidity: ${sensorData.humidity.toFixed(0)}%\n🌱 Moisture: ${sensorData.moisture.toFixed(0)}%\n🧪 pH: ${sensorData.ph.toFixed(1)}`;
+                sendToLine(message);
+            }, 30000);
+
+            // Animate cards on load
             anime({
-                targets: '.bg-blob-3',
-                scale: [1, 1.1, 0.9, 1],
-                duration: 25000,
-                easing: 'easeInOutSine',
-                loop: true
+                targets: '.sensor-card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutExpo'
             });
-        }
-        }); // End DOMContentLoaded for animations
+        });
     </script>
 </body>
 </html>
