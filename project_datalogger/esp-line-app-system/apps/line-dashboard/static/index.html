@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Datalogger · LINE</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main>
+    <h1>Smart Datalogger · LINE</h1>
+    <p id="status" class="status-text">Đang kiểm tra cấu hình server...</p>
+
+    <section class="sensor-panel" aria-labelledby="access-title">
+      <h2 id="access-title">Kết nối server</h2>
+      <label for="api-key">API key của datalogger</label>
+      <input id="api-key" type="password" autocomplete="off" placeholder="DATALOGGER_API_KEY" />
+      <p class="hint">Nhập key đã cấu hình trên server để xem dữ liệu và gửi tin. Key chỉ giữ trong trang đang mở.</p>
+      <button id="connect" type="button">Kết nối</button>
+    </section>
+
+    <section class="sensor-panel" aria-labelledby="sensor-title">
+      <div class="sensor-panel-head">
+        <h2 id="sensor-title">Dữ liệu ESP32 gần nhất</h2>
+        <button type="button" id="refresh" class="secondary-btn">Làm mới</button>
+      </div>
+      <label for="device">Thiết bị</label>
+      <select id="device"><option value="">Chưa có dữ liệu</option></select>
+      <p id="reading-status" aria-live="polite">Nhập API key rồi nhấn Kết nối.</p>
+      <div class="sensor-grid">
+        <article class="sensor-card sensor-temp"><p class="sensor-label">Nhiệt độ</p><p class="sensor-value"><span id="temperature">--</span><span class="sensor-unit">°C</span></p></article>
+        <article class="sensor-card sensor-humid"><p class="sensor-label">Độ ẩm</p><p class="sensor-value"><span id="humidity">--</span><span class="sensor-unit">%</span></p></article>
+        <article class="sensor-card sensor-soil"><p class="sensor-label">Áp suất</p><p class="sensor-value"><span id="pressure">--</span><span class="sensor-unit">hPa</span></p></article>
+        <article class="sensor-card sensor-soil"><p class="sensor-label">Ánh sáng</p><p class="sensor-value"><span id="light">--</span><span class="sensor-unit">lux</span></p></article>
+        <article class="sensor-card sensor-humid"><p class="sensor-label">Tiếng ồn</p><p class="sensor-value"><span id="noise">--</span><span class="sensor-unit">dB</span></p></article>
+      </div>
+      <p class="hint">Hiển thị snapshot cuối server nhận được; thời điểm nhận cho biết độ mới của dữ liệu. Cảm biến lỗi hoặc STM32 offline hiển thị “--”.</p>
+    </section>
+
+    <form id="notify-form">
+      <h2>Gửi tin thủ công</h2>
+      <label for="target-type">Gửi đến</label>
+      <select id="target-type">
+        <option value="user">Người dùng / nhóm</option>
+        <option value="broadcast">Tất cả người theo dõi (broadcast)</option>
+      </select>
+      <label for="target-id" id="target-label">User / Group ID (để trống dùng LINE_TARGET_ID của server)</label>
+      <input id="target-id" placeholder="U... hoặc C... hoặc R..." />
+      <label for="message">Nội dung</label>
+      <textarea id="message" rows="4" maxlength="5000" placeholder="Nhập tin nhắn cần gửi" required></textarea>
+      <button id="send" type="submit">Gửi đến LINE</button>
+    </form>
+    <div id="result" aria-live="polite"></div>
+
+    <section class="sensor-panel targets-panel">
+      <div class="sensor-panel-head">
+        <h2>ID nhận được qua webhook</h2>
+        <button type="button" id="refresh-targets" class="secondary-btn">Tải danh sách</button>
+      </div>
+      <p class="hint">Dùng ID người dùng / nhóm cần nhận tin để cấu hình LINE_TARGET_ID trên server.</p>
+      <pre id="targets">Chưa tải.</pre>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
